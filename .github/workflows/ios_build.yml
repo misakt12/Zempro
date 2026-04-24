@@ -23,11 +23,13 @@ jobs:
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v3
 
+    - name: Build Shared Kotlin Module
+      run: |
+        chmod +x gradlew
+        ./gradlew :shared:embedAndSignAppleFrameworkForXcode
+
     - name: Build iOS App (Unsigned)
       run: |
-        # Oprava oprávnění pro gradlew
-        chmod +x gradlew
-        
         cd iosApp
         # Odemkneme keychain (i když není podepsáno, xcodebuild to občas vyžaduje)
         security create-keychain -p "" build.keychain
@@ -45,7 +47,7 @@ jobs:
           CODE_SIGN_IDENTITY="" \
           CODE_SIGNING_REQUIRED=NO \
           CODE_SIGNING_ALLOWED=NO \
-          COMPILER_INDEX_STORE_ENABLE=NO > ../xcodebuild.log 2>&1
+          COMPILER_INDEX_STORE_ENABLE=NO > ../xcodebuild.log 2>&1 || (tail -n 100 ../xcodebuild.log && exit 1)
           
     - name: Upload Build Log
       if: failure()
