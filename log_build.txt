@@ -1,0 +1,278 @@
+﻿
+> Configure project :shared
+w: The following Kotlin/Native targets cannot be built on this machine and are disabled:
+iosArm64, iosSimulatorArm64, iosX64
+To hide this message, add 'kotlin.native.ignoreDisabledTargets=true' to the Gradle properties.
+
+w: The Default Kotlin Hierarchy Template was not applied to 'project ':shared'':
+Explicit .dependsOn() edges were configured for the following source sets:
+[iosArm64Main, iosMain, iosSimulatorArm64Main, iosX64Main]
+
+Consider removing dependsOn-calls or disabling the default template by adding
+    'kotlin.mpp.applyDefaultHierarchyTemplate=false'
+to your gradle.properties
+
+Learn more about hierarchy templates: https://kotl.in/hierarchy-template
+
+
+> Task :desktopApp:checkKotlinGradlePluginConfigurationErrors
+> Task :shared:checkKotlinGradlePluginConfigurationErrors
+> Task :shared:desktopProcessResources UP-TO-DATE
+> Task :desktopApp:jvmProcessResources NO-SOURCE
+> Task :desktopApp:prepareAppResources NO-SOURCE
+
+> Task :shared:compileKotlinDesktop
+w: file:///C:/Users/misak/Desktop/Misa%20aplikace/shared/src/commonMain/kotlin/com/zakazky/app/common/models/AppDatabase.kt:38:9 This declaration needs opt-in. Its usage should be marked with '@kotlinx.serialization.ExperimentalSerializationApi' or '@OptIn(kotlinx.serialization.ExperimentalSerializationApi::class)'
+w: file:///C:/Users/misak/Desktop/Misa%20aplikace/shared/src/commonMain/kotlin/com/zakazky/app/common/models/AppDatabase.kt:480:20 Unnecessary safe call on a non-null receiver of type String
+w: file:///C:/Users/misak/Desktop/Misa%20aplikace/shared/src/commonMain/kotlin/com/zakazky/app/common/models/AppDatabase.kt:523:29 Parameter 'dispatcher' is never used
+w: file:///C:/Users/misak/Desktop/Misa%20aplikace/shared/src/commonMain/kotlin/com/zakazky/app/common/ui/DashboardScreen.kt:44:5 Parameter 'onDesktopTabSelected' is never used
+w: file:///C:/Users/misak/Desktop/Misa%20aplikace/shared/src/commonMain/kotlin/com/zakazky/app/common/ui/DashboardScreen.kt:47:5 Parameter 'onAddTaskClick' is never used
+w: file:///C:/Users/misak/Desktop/Misa%20aplikace/shared/src/commonMain/kotlin/com/zakazky/app/common/ui/DashboardScreen.kt:526:47 Parameter 'isAdmin' is never used
+w: file:///C:/Users/misak/Desktop/Misa%20aplikace/shared/src/commonMain/kotlin/com/zakazky/app/common/ui/AddTaskDialog.kt:152:72 Elvis operator (?:) always returns the left operand of non-nullable type String
+w: file:///C:/Users/misak/Desktop/Misa%20aplikace/shared/src/commonMain/kotlin/com/zakazky/app/common/ui/AddTaskDialog.kt:310:35 Parameter 'model' is never used
+w: file:///C:/Users/misak/Desktop/Misa%20aplikace/shared/src/commonMain/kotlin/com/zakazky/app/common/ui/CustomersScreen.kt:52:38 Elvis operator (?:) always returns the left operand of non-nullable type String
+w: file:///C:/Users/misak/Desktop/Misa%20aplikace/shared/src/commonMain/kotlin/com/zakazky/app/common/ui/CustomersScreen.kt:77:95 Unnecessary safe call on a non-null receiver of type String
+w: file:///C:/Users/misak/Desktop/Misa%20aplikace/shared/src/commonMain/kotlin/com/zakazky/app/common/ui/CustomersScreen.kt:256:48 Unnecessary safe call on a non-null receiver of type String
+
+> Task :shared:desktopMainClasses
+> Task :shared:desktopJar
+> Task :desktopApp:compileKotlinJvm
+> Task :desktopApp:jvmMainClasses
+> Task :desktopApp:jvmJar UP-TO-DATE
+
+> Task :desktopApp:run
+Stahov├ín├ş dat ze Supabase cloudu... (pokus 1)
+Info: (Core) SupabaseClient created! Please report any bugs you find.
+Ôťů Cloud sync OK ÔÇö sta┼żeno 9 zak├ízek, 3 u┼żivatel┼». Dogenerov├íno notifikac├ş: 0
+­čôŽ Spou┼ít├şm automatickou z├ílohu p┼Öi startu (dne┼ín├ş je┼ít─Ť nebyla)...
+Ôťů Automatick├í z├íloha ulo┼żena: C:\Users\misak\Documents\Zempro Z├ílohy\zaloha_latest.json
+­čôů M─Ťs├ş─Źn├ş z├íloha vytvo┼Öena: zaloha_mesicni_2026-04.json
+­čŚĹ´ŞĆ Zak├ízka 'Audi A4 - 2018 - 2.0 TDI - P┼Öedn├ş n├íhon - Automatick├í p┼Öevodovka' p┼Öesunuta do ko┼íe.
+ÔŁî Upload do cloudu selhal: Could not find the 'deletedAt' column of 'tasks' in the schema cache
+URL: https://xwcbdfudpgyxrkllipxk.supabase.co/rest/v1/tasks
+Headers: [Authorization=[Bearer sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], Prefer=[return=minimal,resolution=merge-duplicates,missing=default], Content-Profile=[public], apikey=[sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], X-Client-Info=[supabase-kt/2.1.3], Accept=[application/json], Accept-Charset=[UTF-8]]
+Http Method: POST
+­čöä Polling zachytil neodeslan├í lok├íln├ş data! Spou┼ít├şm z├íchrann├Ż upload m├şsto stahov├ín├ş.
+ÔŁî Upload do cloudu selhal: Could not find the 'deletedAt' column of 'tasks' in the schema cache
+URL: https://xwcbdfudpgyxrkllipxk.supabase.co/rest/v1/tasks
+Headers: [Authorization=[Bearer sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], Prefer=[return=minimal,resolution=merge-duplicates,missing=default], Content-Profile=[public], apikey=[sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], X-Client-Info=[supabase-kt/2.1.3], Accept=[application/json], Accept-Charset=[UTF-8]]
+Http Method: POST
+­čöä Polling zachytil neodeslan├í lok├íln├ş data! Spou┼ít├şm z├íchrann├Ż upload m├şsto stahov├ín├ş.
+ÔŁî Upload do cloudu selhal: Could not find the 'deletedAt' column of 'tasks' in the schema cache
+URL: https://xwcbdfudpgyxrkllipxk.supabase.co/rest/v1/tasks
+Headers: [Authorization=[Bearer sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], Prefer=[return=minimal,resolution=merge-duplicates,missing=default], Content-Profile=[public], apikey=[sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], X-Client-Info=[supabase-kt/2.1.3], Accept=[application/json], Accept-Charset=[UTF-8]]
+Http Method: POST
+­čöä Polling zachytil neodeslan├í lok├íln├ş data! Spou┼ít├şm z├íchrann├Ż upload m├şsto stahov├ín├ş.
+ÔŁî Upload do cloudu selhal: Could not find the 'deletedAt' column of 'tasks' in the schema cache
+URL: https://xwcbdfudpgyxrkllipxk.supabase.co/rest/v1/tasks
+Headers: [Authorization=[Bearer sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], Prefer=[return=minimal,resolution=merge-duplicates,missing=default], Content-Profile=[public], apikey=[sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], X-Client-Info=[supabase-kt/2.1.3], Accept=[application/json], Accept-Charset=[UTF-8]]
+Http Method: POST
+ÔÖ╗´ŞĆ Zak├ízka 'Audi A4 - 2018 - 2.0 TDI - P┼Öedn├ş n├íhon - Automatick├í p┼Öevodovka' obnovena z ko┼íe.
+ÔŁî Upload do cloudu selhal: Could not find the 'deletedAt' column of 'tasks' in the schema cache
+URL: https://xwcbdfudpgyxrkllipxk.supabase.co/rest/v1/tasks
+Headers: [Authorization=[Bearer sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], Prefer=[return=minimal,resolution=merge-duplicates,missing=default], Content-Profile=[public], apikey=[sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], X-Client-Info=[supabase-kt/2.1.3], Accept=[application/json], Accept-Charset=[UTF-8]]
+Http Method: POST
+­čöä Polling zachytil neodeslan├í lok├íln├ş data! Spou┼ít├şm z├íchrann├Ż upload m├şsto stahov├ín├ş.
+ÔŁî Upload do cloudu selhal: Could not find the 'deletedAt' column of 'tasks' in the schema cache
+URL: https://xwcbdfudpgyxrkllipxk.supabase.co/rest/v1/tasks
+Headers: [Authorization=[Bearer sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], Prefer=[return=minimal,resolution=merge-duplicates,missing=default], Content-Profile=[public], apikey=[sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], X-Client-Info=[supabase-kt/2.1.3], Accept=[application/json], Accept-Charset=[UTF-8]]
+Http Method: POST
+­čöä Polling zachytil neodeslan├í lok├íln├ş data! Spou┼ít├şm z├íchrann├Ż upload m├şsto stahov├ín├ş.
+ÔŁî Upload do cloudu selhal: Could not find the 'deletedAt' column of 'tasks' in the schema cache
+URL: https://xwcbdfudpgyxrkllipxk.supabase.co/rest/v1/tasks
+Headers: [Authorization=[Bearer sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], Prefer=[return=minimal,resolution=merge-duplicates,missing=default], Content-Profile=[public], apikey=[sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], X-Client-Info=[supabase-kt/2.1.3], Accept=[application/json], Accept-Charset=[UTF-8]]
+Http Method: POST
+­čöä Polling zachytil neodeslan├í lok├íln├ş data! Spou┼ít├şm z├íchrann├Ż upload m├şsto stahov├ín├ş.
+ÔŁî Upload do cloudu selhal: Could not find the 'deletedAt' column of 'tasks' in the schema cache
+URL: https://xwcbdfudpgyxrkllipxk.supabase.co/rest/v1/tasks
+Headers: [Authorization=[Bearer sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], Prefer=[return=minimal,resolution=merge-duplicates,missing=default], Content-Profile=[public], apikey=[sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], X-Client-Info=[supabase-kt/2.1.3], Accept=[application/json], Accept-Charset=[UTF-8]]
+Http Method: POST
+­čöä Polling zachytil neodeslan├í lok├íln├ş data! Spou┼ít├şm z├íchrann├Ż upload m├şsto stahov├ín├ş.
+ÔŁî Upload do cloudu selhal: Could not find the 'deletedAt' column of 'tasks' in the schema cache
+URL: https://xwcbdfudpgyxrkllipxk.supabase.co/rest/v1/tasks
+Headers: [Authorization=[Bearer sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], Prefer=[return=minimal,resolution=merge-duplicates,missing=default], Content-Profile=[public], apikey=[sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], X-Client-Info=[supabase-kt/2.1.3], Accept=[application/json], Accept-Charset=[UTF-8]]
+Http Method: POST
+­čöä Polling zachytil neodeslan├í lok├íln├ş data! Spou┼ít├şm z├íchrann├Ż upload m├şsto stahov├ín├ş.
+ÔŁî Upload do cloudu selhal: Could not find the 'deletedAt' column of 'tasks' in the schema cache
+URL: https://xwcbdfudpgyxrkllipxk.supabase.co/rest/v1/tasks
+Headers: [Authorization=[Bearer sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], Prefer=[return=minimal,resolution=merge-duplicates,missing=default], Content-Profile=[public], apikey=[sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], X-Client-Info=[supabase-kt/2.1.3], Accept=[application/json], Accept-Charset=[UTF-8]]
+Http Method: POST
+­čöä Polling zachytil neodeslan├í lok├íln├ş data! Spou┼ít├şm z├íchrann├Ż upload m├şsto stahov├ín├ş.
+ÔŁî Upload do cloudu selhal: Could not find the 'deletedAt' column of 'tasks' in the schema cache
+URL: https://xwcbdfudpgyxrkllipxk.supabase.co/rest/v1/tasks
+Headers: [Authorization=[Bearer sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], Prefer=[return=minimal,resolution=merge-duplicates,missing=default], Content-Profile=[public], apikey=[sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], X-Client-Info=[supabase-kt/2.1.3], Accept=[application/json], Accept-Charset=[UTF-8]]
+Http Method: POST
+­čŚĹ´ŞĆ Zak├ízka '┼ákoda Octavia Combi - 2010 - 2.0 TDI (CR) - P┼Öedn├ş n├íhon - Automatick├í p┼Öevodovka' p┼Öesunuta do ko┼íe.
+­čöä Polling zachytil neodeslan├í lok├íln├ş data! Spou┼ít├şm z├íchrann├Ż upload m├şsto stahov├ín├ş.
+ÔŁî Upload do cloudu selhal: Could not find the 'deletedAt' column of 'tasks' in the schema cache
+URL: https://xwcbdfudpgyxrkllipxk.supabase.co/rest/v1/tasks
+Headers: [Authorization=[Bearer sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], Prefer=[return=minimal,resolution=merge-duplicates,missing=default], Content-Profile=[public], apikey=[sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], X-Client-Info=[supabase-kt/2.1.3], Accept=[application/json], Accept-Charset=[UTF-8]]
+Http Method: POST
+ÔŁî Upload do cloudu selhal: Could not find the 'deletedAt' column of 'tasks' in the schema cache
+URL: https://xwcbdfudpgyxrkllipxk.supabase.co/rest/v1/tasks
+Headers: [Authorization=[Bearer sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], Prefer=[return=minimal,resolution=merge-duplicates,missing=default], Content-Profile=[public], apikey=[sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], X-Client-Info=[supabase-kt/2.1.3], Accept=[application/json], Accept-Charset=[UTF-8]]
+Http Method: POST
+­čöä Polling zachytil neodeslan├í lok├íln├ş data! Spou┼ít├şm z├íchrann├Ż upload m├şsto stahov├ín├ş.
+ÔŁî Upload do cloudu selhal: Could not find the 'deletedAt' column of 'tasks' in the schema cache
+URL: https://xwcbdfudpgyxrkllipxk.supabase.co/rest/v1/tasks
+Headers: [Authorization=[Bearer sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], Prefer=[return=minimal,resolution=merge-duplicates,missing=default], Content-Profile=[public], apikey=[sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], X-Client-Info=[supabase-kt/2.1.3], Accept=[application/json], Accept-Charset=[UTF-8]]
+Http Method: POST
+­čöä Polling zachytil neodeslan├í lok├íln├ş data! Spou┼ít├şm z├íchrann├Ż upload m├şsto stahov├ín├ş.
+ÔŁî Upload do cloudu selhal: Could not find the 'deletedAt' column of 'tasks' in the schema cache
+URL: https://xwcbdfudpgyxrkllipxk.supabase.co/rest/v1/tasks
+Headers: [Authorization=[Bearer sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], Prefer=[return=minimal,resolution=merge-duplicates,missing=default], Content-Profile=[public], apikey=[sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], X-Client-Info=[supabase-kt/2.1.3], Accept=[application/json], Accept-Charset=[UTF-8]]
+Http Method: POST
+­čöä Polling zachytil neodeslan├í lok├íln├ş data! Spou┼ít├şm z├íchrann├Ż upload m├şsto stahov├ín├ş.
+ÔŁî Upload do cloudu selhal: Could not find the 'deletedAt' column of 'tasks' in the schema cache
+URL: https://xwcbdfudpgyxrkllipxk.supabase.co/rest/v1/tasks
+Headers: [Authorization=[Bearer sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], Prefer=[return=minimal,resolution=merge-duplicates,missing=default], Content-Profile=[public], apikey=[sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], X-Client-Info=[supabase-kt/2.1.3], Accept=[application/json], Accept-Charset=[UTF-8]]
+Http Method: POST
+ÔÖ╗´ŞĆ Zak├ízka '┼ákoda Octavia Combi - 2010 - 2.0 TDI (CR) - P┼Öedn├ş n├íhon - Automatick├í p┼Öevodovka' obnovena z ko┼íe.
+ÔŁî Upload do cloudu selhal: Could not find the 'deletedAt' column of 'tasks' in the schema cache
+URL: https://xwcbdfudpgyxrkllipxk.supabase.co/rest/v1/tasks
+Headers: [Authorization=[Bearer sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], Prefer=[return=minimal,resolution=merge-duplicates,missing=default], Content-Profile=[public], apikey=[sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], X-Client-Info=[supabase-kt/2.1.3], Accept=[application/json], Accept-Charset=[UTF-8]]
+Http Method: POST
+­čöä Polling zachytil neodeslan├í lok├íln├ş data! Spou┼ít├şm z├íchrann├Ż upload m├şsto stahov├ín├ş.
+ÔŁî Upload do cloudu selhal: Could not find the 'deletedAt' column of 'tasks' in the schema cache
+URL: https://xwcbdfudpgyxrkllipxk.supabase.co/rest/v1/tasks
+Headers: [Authorization=[Bearer sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], Prefer=[return=minimal,resolution=merge-duplicates,missing=default], Content-Profile=[public], apikey=[sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], X-Client-Info=[supabase-kt/2.1.3], Accept=[application/json], Accept-Charset=[UTF-8]]
+Http Method: POST
+­čöä Polling zachytil neodeslan├í lok├íln├ş data! Spou┼ít├şm z├íchrann├Ż upload m├şsto stahov├ín├ş.
+ÔŁî Upload do cloudu selhal: Could not find the 'deletedAt' column of 'tasks' in the schema cache
+URL: https://xwcbdfudpgyxrkllipxk.supabase.co/rest/v1/tasks
+Headers: [Authorization=[Bearer sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], Prefer=[return=minimal,resolution=merge-duplicates,missing=default], Content-Profile=[public], apikey=[sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], X-Client-Info=[supabase-kt/2.1.3], Accept=[application/json], Accept-Charset=[UTF-8]]
+Http Method: POST
+­čöä Polling zachytil neodeslan├í lok├íln├ş data! Spou┼ít├şm z├íchrann├Ż upload m├şsto stahov├ín├ş.
+ÔŁî Upload do cloudu selhal: Could not find the 'deletedAt' column of 'tasks' in the schema cache
+URL: https://xwcbdfudpgyxrkllipxk.supabase.co/rest/v1/tasks
+Headers: [Authorization=[Bearer sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], Prefer=[return=minimal,resolution=merge-duplicates,missing=default], Content-Profile=[public], apikey=[sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], X-Client-Info=[supabase-kt/2.1.3], Accept=[application/json], Accept-Charset=[UTF-8]]
+Http Method: POST
+­čöä Polling zachytil neodeslan├í lok├íln├ş data! Spou┼ít├şm z├íchrann├Ż upload m├şsto stahov├ín├ş.
+ÔŁî Upload do cloudu selhal: Could not find the 'deletedAt' column of 'tasks' in the schema cache
+URL: https://xwcbdfudpgyxrkllipxk.supabase.co/rest/v1/tasks
+Headers: [Authorization=[Bearer sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], Prefer=[return=minimal,resolution=merge-duplicates,missing=default], Content-Profile=[public], apikey=[sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], X-Client-Info=[supabase-kt/2.1.3], Accept=[application/json], Accept-Charset=[UTF-8]]
+Http Method: POST
+­čöä Polling zachytil neodeslan├í lok├íln├ş data! Spou┼ít├şm z├íchrann├Ż upload m├şsto stahov├ín├ş.
+ÔŁî Upload do cloudu selhal: Could not find the 'deletedAt' column of 'tasks' in the schema cache
+URL: https://xwcbdfudpgyxrkllipxk.supabase.co/rest/v1/tasks
+Headers: [Authorization=[Bearer sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], Prefer=[return=minimal,resolution=merge-duplicates,missing=default], Content-Profile=[public], apikey=[sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], X-Client-Info=[supabase-kt/2.1.3], Accept=[application/json], Accept-Charset=[UTF-8]]
+Http Method: POST
+­čöä Polling zachytil neodeslan├í lok├íln├ş data! Spou┼ít├şm z├íchrann├Ż upload m├şsto stahov├ín├ş.
+ÔŁî Upload do cloudu selhal: Could not find the 'deletedAt' column of 'tasks' in the schema cache
+URL: https://xwcbdfudpgyxrkllipxk.supabase.co/rest/v1/tasks
+Headers: [Authorization=[Bearer sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], Prefer=[return=minimal,resolution=merge-duplicates,missing=default], Content-Profile=[public], apikey=[sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], X-Client-Info=[supabase-kt/2.1.3], Accept=[application/json], Accept-Charset=[UTF-8]]
+Http Method: POST
+­čöä Polling zachytil neodeslan├í lok├íln├ş data! Spou┼ít├şm z├íchrann├Ż upload m├şsto stahov├ín├ş.
+ÔŁî Upload do cloudu selhal: Could not find the 'deletedAt' column of 'tasks' in the schema cache
+URL: https://xwcbdfudpgyxrkllipxk.supabase.co/rest/v1/tasks
+Headers: [Authorization=[Bearer sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], Prefer=[return=minimal,resolution=merge-duplicates,missing=default], Content-Profile=[public], apikey=[sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], X-Client-Info=[supabase-kt/2.1.3], Accept=[application/json], Accept-Charset=[UTF-8]]
+Http Method: POST
+­čöä Polling zachytil neodeslan├í lok├íln├ş data! Spou┼ít├şm z├íchrann├Ż upload m├şsto stahov├ín├ş.
+ÔŁî Upload do cloudu selhal: Could not find the 'deletedAt' column of 'tasks' in the schema cache
+URL: https://xwcbdfudpgyxrkllipxk.supabase.co/rest/v1/tasks
+Headers: [Authorization=[Bearer sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], Prefer=[return=minimal,resolution=merge-duplicates,missing=default], Content-Profile=[public], apikey=[sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], X-Client-Info=[supabase-kt/2.1.3], Accept=[application/json], Accept-Charset=[UTF-8]]
+Http Method: POST
+­čöä Polling zachytil neodeslan├í lok├íln├ş data! Spou┼ít├şm z├íchrann├Ż upload m├şsto stahov├ín├ş.
+ÔŁî Upload do cloudu selhal: Could not find the 'deletedAt' column of 'tasks' in the schema cache
+URL: https://xwcbdfudpgyxrkllipxk.supabase.co/rest/v1/tasks
+Headers: [Authorization=[Bearer sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], Prefer=[return=minimal,resolution=merge-duplicates,missing=default], Content-Profile=[public], apikey=[sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], X-Client-Info=[supabase-kt/2.1.3], Accept=[application/json], Accept-Charset=[UTF-8]]
+Http Method: POST
+­čöä Polling zachytil neodeslan├í lok├íln├ş data! Spou┼ít├şm z├íchrann├Ż upload m├şsto stahov├ín├ş.
+ÔŁî Upload do cloudu selhal: Could not find the 'deletedAt' column of 'tasks' in the schema cache
+URL: https://xwcbdfudpgyxrkllipxk.supabase.co/rest/v1/tasks
+Headers: [Authorization=[Bearer sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], Prefer=[return=minimal,resolution=merge-duplicates,missing=default], Content-Profile=[public], apikey=[sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], X-Client-Info=[supabase-kt/2.1.3], Accept=[application/json], Accept-Charset=[UTF-8]]
+Http Method: POST
+­čöä Polling zachytil neodeslan├í lok├íln├ş data! Spou┼ít├şm z├íchrann├Ż upload m├şsto stahov├ín├ş.
+ÔŁî Upload do cloudu selhal: Could not find the 'deletedAt' column of 'tasks' in the schema cache
+URL: https://xwcbdfudpgyxrkllipxk.supabase.co/rest/v1/tasks
+Headers: [Authorization=[Bearer sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], Prefer=[return=minimal,resolution=merge-duplicates,missing=default], Content-Profile=[public], apikey=[sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], X-Client-Info=[supabase-kt/2.1.3], Accept=[application/json], Accept-Charset=[UTF-8]]
+Http Method: POST
+­čöä Polling zachytil neodeslan├í lok├íln├ş data! Spou┼ít├şm z├íchrann├Ż upload m├şsto stahov├ín├ş.
+ÔŁî Upload do cloudu selhal: Could not find the 'deletedAt' column of 'tasks' in the schema cache
+URL: https://xwcbdfudpgyxrkllipxk.supabase.co/rest/v1/tasks
+Headers: [Authorization=[Bearer sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], Prefer=[return=minimal,resolution=merge-duplicates,missing=default], Content-Profile=[public], apikey=[sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], X-Client-Info=[supabase-kt/2.1.3], Accept=[application/json], Accept-Charset=[UTF-8]]
+Http Method: POST
+­čöä Polling zachytil neodeslan├í lok├íln├ş data! Spou┼ít├şm z├íchrann├Ż upload m├şsto stahov├ín├ş.
+ÔŁî Upload do cloudu selhal: Could not find the 'deletedAt' column of 'tasks' in the schema cache
+URL: https://xwcbdfudpgyxrkllipxk.supabase.co/rest/v1/tasks
+Headers: [Authorization=[Bearer sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], Prefer=[return=minimal,resolution=merge-duplicates,missing=default], Content-Profile=[public], apikey=[sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], X-Client-Info=[supabase-kt/2.1.3], Accept=[application/json], Accept-Charset=[UTF-8]]
+Http Method: POST
+­čöä Polling zachytil neodeslan├í lok├íln├ş data! Spou┼ít├şm z├íchrann├Ż upload m├şsto stahov├ín├ş.
+ÔŁî Upload do cloudu selhal: Could not find the 'deletedAt' column of 'tasks' in the schema cache
+URL: https://xwcbdfudpgyxrkllipxk.supabase.co/rest/v1/tasks
+Headers: [Authorization=[Bearer sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], Prefer=[return=minimal,resolution=merge-duplicates,missing=default], Content-Profile=[public], apikey=[sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], X-Client-Info=[supabase-kt/2.1.3], Accept=[application/json], Accept-Charset=[UTF-8]]
+Http Method: POST
+­čöä Polling zachytil neodeslan├í lok├íln├ş data! Spou┼ít├şm z├íchrann├Ż upload m├şsto stahov├ín├ş.
+ÔŁî Upload do cloudu selhal: Could not find the 'deletedAt' column of 'tasks' in the schema cache
+URL: https://xwcbdfudpgyxrkllipxk.supabase.co/rest/v1/tasks
+Headers: [Authorization=[Bearer sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], Prefer=[return=minimal,resolution=merge-duplicates,missing=default], Content-Profile=[public], apikey=[sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], X-Client-Info=[supabase-kt/2.1.3], Accept=[application/json], Accept-Charset=[UTF-8]]
+Http Method: POST
+­čöä Polling zachytil neodeslan├í lok├íln├ş data! Spou┼ít├şm z├íchrann├Ż upload m├şsto stahov├ín├ş.
+ÔŁî Upload do cloudu selhal: Could not find the 'deletedAt' column of 'tasks' in the schema cache
+URL: https://xwcbdfudpgyxrkllipxk.supabase.co/rest/v1/tasks
+Headers: [Authorization=[Bearer sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], Prefer=[return=minimal,resolution=merge-duplicates,missing=default], Content-Profile=[public], apikey=[sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], X-Client-Info=[supabase-kt/2.1.3], Accept=[application/json], Accept-Charset=[UTF-8]]
+Http Method: POST
+­čöä Polling zachytil neodeslan├í lok├íln├ş data! Spou┼ít├şm z├íchrann├Ż upload m├şsto stahov├ín├ş.
+ÔŁî Upload do cloudu selhal: Could not find the 'deletedAt' column of 'tasks' in the schema cache
+URL: https://xwcbdfudpgyxrkllipxk.supabase.co/rest/v1/tasks
+Headers: [Authorization=[Bearer sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], Prefer=[return=minimal,resolution=merge-duplicates,missing=default], Content-Profile=[public], apikey=[sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], X-Client-Info=[supabase-kt/2.1.3], Accept=[application/json], Accept-Charset=[UTF-8]]
+Http Method: POST
+­čöä Polling zachytil neodeslan├í lok├íln├ş data! Spou┼ít├şm z├íchrann├Ż upload m├şsto stahov├ín├ş.
+ÔŁî Upload do cloudu selhal: Could not find the 'deletedAt' column of 'tasks' in the schema cache
+URL: https://xwcbdfudpgyxrkllipxk.supabase.co/rest/v1/tasks
+Headers: [Authorization=[Bearer sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], Prefer=[return=minimal,resolution=merge-duplicates,missing=default], Content-Profile=[public], apikey=[sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], X-Client-Info=[supabase-kt/2.1.3], Accept=[application/json], Accept-Charset=[UTF-8]]
+Http Method: POST
+­čöä Polling zachytil neodeslan├í lok├íln├ş data! Spou┼ít├şm z├íchrann├Ż upload m├şsto stahov├ín├ş.
+ÔŁî Upload do cloudu selhal: Could not find the 'deletedAt' column of 'tasks' in the schema cache
+URL: https://xwcbdfudpgyxrkllipxk.supabase.co/rest/v1/tasks
+Headers: [Authorization=[Bearer sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], Prefer=[return=minimal,resolution=merge-duplicates,missing=default], Content-Profile=[public], apikey=[sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], X-Client-Info=[supabase-kt/2.1.3], Accept=[application/json], Accept-Charset=[UTF-8]]
+Http Method: POST
+­čöä Polling zachytil neodeslan├í lok├íln├ş data! Spou┼ít├şm z├íchrann├Ż upload m├şsto stahov├ín├ş.
+ÔŁî Upload do cloudu selhal: Could not find the 'deletedAt' column of 'tasks' in the schema cache
+URL: https://xwcbdfudpgyxrkllipxk.supabase.co/rest/v1/tasks
+Headers: [Authorization=[Bearer sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], Prefer=[return=minimal,resolution=merge-duplicates,missing=default], Content-Profile=[public], apikey=[sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], X-Client-Info=[supabase-kt/2.1.3], Accept=[application/json], Accept-Charset=[UTF-8]]
+Http Method: POST
+­čöä Polling zachytil neodeslan├í lok├íln├ş data! Spou┼ít├şm z├íchrann├Ż upload m├şsto stahov├ín├ş.
+ÔŁî Upload do cloudu selhal: Could not find the 'deletedAt' column of 'tasks' in the schema cache
+URL: https://xwcbdfudpgyxrkllipxk.supabase.co/rest/v1/tasks
+Headers: [Authorization=[Bearer sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], Prefer=[return=minimal,resolution=merge-duplicates,missing=default], Content-Profile=[public], apikey=[sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], X-Client-Info=[supabase-kt/2.1.3], Accept=[application/json], Accept-Charset=[UTF-8]]
+Http Method: POST
+­čöä Polling zachytil neodeslan├í lok├íln├ş data! Spou┼ít├şm z├íchrann├Ż upload m├şsto stahov├ín├ş.
+ÔŁî Upload do cloudu selhal: Could not find the 'deletedAt' column of 'tasks' in the schema cache
+URL: https://xwcbdfudpgyxrkllipxk.supabase.co/rest/v1/tasks
+Headers: [Authorization=[Bearer sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], Prefer=[return=minimal,resolution=merge-duplicates,missing=default], Content-Profile=[public], apikey=[sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], X-Client-Info=[supabase-kt/2.1.3], Accept=[application/json], Accept-Charset=[UTF-8]]
+Http Method: POST
+­čöä Polling zachytil neodeslan├í lok├íln├ş data! Spou┼ít├şm z├íchrann├Ż upload m├şsto stahov├ín├ş.
+ÔŁî Upload do cloudu selhal: Could not find the 'deletedAt' column of 'tasks' in the schema cache
+URL: https://xwcbdfudpgyxrkllipxk.supabase.co/rest/v1/tasks
+Headers: [Authorization=[Bearer sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], Prefer=[return=minimal,resolution=merge-duplicates,missing=default], Content-Profile=[public], apikey=[sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], X-Client-Info=[supabase-kt/2.1.3], Accept=[application/json], Accept-Charset=[UTF-8]]
+Http Method: POST
+­čöä Polling zachytil neodeslan├í lok├íln├ş data! Spou┼ít├şm z├íchrann├Ż upload m├şsto stahov├ín├ş.
+ÔŁî Upload do cloudu selhal: Could not find the 'deletedAt' column of 'tasks' in the schema cache
+URL: https://xwcbdfudpgyxrkllipxk.supabase.co/rest/v1/tasks
+Headers: [Authorization=[Bearer sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], Prefer=[return=minimal,resolution=merge-duplicates,missing=default], Content-Profile=[public], apikey=[sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], X-Client-Info=[supabase-kt/2.1.3], Accept=[application/json], Accept-Charset=[UTF-8]]
+Http Method: POST
+­čöä Polling zachytil neodeslan├í lok├íln├ş data! Spou┼ít├şm z├íchrann├Ż upload m├şsto stahov├ín├ş.
+ÔŁî Upload do cloudu selhal: Could not find the 'deletedAt' column of 'tasks' in the schema cache
+URL: https://xwcbdfudpgyxrkllipxk.supabase.co/rest/v1/tasks
+Headers: [Authorization=[Bearer sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], Prefer=[return=minimal,resolution=merge-duplicates,missing=default], Content-Profile=[public], apikey=[sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], X-Client-Info=[supabase-kt/2.1.3], Accept=[application/json], Accept-Charset=[UTF-8]]
+Http Method: POST
+­čöä Polling zachytil neodeslan├í lok├íln├ş data! Spou┼ít├şm z├íchrann├Ż upload m├şsto stahov├ín├ş.
+ÔŁî Upload do cloudu selhal: Could not find the 'deletedAt' column of 'tasks' in the schema cache
+URL: https://xwcbdfudpgyxrkllipxk.supabase.co/rest/v1/tasks
+Headers: [Authorization=[Bearer sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], Prefer=[return=minimal,resolution=merge-duplicates,missing=default], Content-Profile=[public], apikey=[sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], X-Client-Info=[supabase-kt/2.1.3], Accept=[application/json], Accept-Charset=[UTF-8]]
+Http Method: POST
+­čöä Polling zachytil neodeslan├í lok├íln├ş data! Spou┼ít├şm z├íchrann├Ż upload m├şsto stahov├ín├ş.
+ÔŁî Upload do cloudu selhal: Could not find the 'deletedAt' column of 'tasks' in the schema cache
+URL: https://xwcbdfudpgyxrkllipxk.supabase.co/rest/v1/tasks
+Headers: [Authorization=[Bearer sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], Prefer=[return=minimal,resolution=merge-duplicates,missing=default], Content-Profile=[public], apikey=[sb_publishable_ZTuKH4LY1CGUez8msu_-og_oeoK2G3e], X-Client-Info=[supabase-kt/2.1.3], Accept=[application/json], Accept-Charset=[UTF-8]]
+Http Method: POST
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.2.1/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 5m 26s
+8 actionable tasks: 6 executed, 2 up-to-date

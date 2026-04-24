@@ -1,0 +1,122 @@
+-- Zempro Supabase Setup SQL
+-- Spusťte tento kód v záložce "SQL Editor" -> "New Query" v Supabase a klikněte na "RUN"
+
+CREATE TABLE IF NOT EXISTS public.users (
+    "id" text PRIMARY KEY,
+    "name" text NOT NULL,
+    "email" text NOT NULL,
+    "pin" text NOT NULL,
+    "photoUrl" text,
+    "role" text NOT NULL,
+    "totalHoursLogged" float8 NOT NULL DEFAULT 0.0,
+    "isActive" boolean NOT NULL DEFAULT true,
+    "phone" text NOT NULL DEFAULT ''
+);
+
+-- Pozor: Pokud už tabulka existuje, tento skript ji nepřepíše, proto je zde příkaz DROP TABLE, abyste to mohl poslat čistě celé znovu s novými sloupci. 
+-- Zkontrolujte, že v db nemáte ostrá data (pokud ano, úkol dejte radši ALTER TABLE, ať si ty ostrá nesmažete)
+DROP TABLE IF EXISTS public.tasks;
+
+CREATE TABLE public.tasks (
+    "id" text PRIMARY KEY,
+    "title" text NOT NULL,
+    "brand" text NOT NULL,
+    "customerName" text NOT NULL,
+    "customerPhone" text NOT NULL DEFAULT '',
+    "customerEmail" text NOT NULL DEFAULT '',
+    "customerAddress" text NOT NULL DEFAULT '',
+    "spz" text NOT NULL,
+    "vin" text NOT NULL,
+    "description" text NOT NULL,
+    "createdBy" text NOT NULL,
+    "assignedTo" text,
+    "status" text NOT NULL,
+    "photoUrls" jsonb NOT NULL DEFAULT '[]'::jsonb,
+    "taskImages" jsonb NOT NULL DEFAULT '[]'::jsonb,
+    "localPhotos" jsonb NOT NULL DEFAULT '[]'::jsonb,
+    "attachedDocuments" jsonb NOT NULL DEFAULT '[]'::jsonb,
+    "timeLogs" jsonb NOT NULL DEFAULT '[]'::jsonb,
+    "electricTimeLogs" jsonb NOT NULL DEFAULT '[]'::jsonb,
+    "reworks" jsonb NOT NULL DEFAULT '[]'::jsonb,
+    "vehicleKm" int4,
+    "invoiceItems" jsonb NOT NULL DEFAULT '[]'::jsonb,
+    "mechanicWorkPrice" float8 NOT NULL DEFAULT 0.0,
+    "electricWorkPrice" float8 NOT NULL DEFAULT 0.0,
+    "mechanicHourlyRate" float8 NOT NULL DEFAULT 0.0,
+    "electricHourlyRate" float8 NOT NULL DEFAULT 0.0,
+    "isInvoiceClosed" boolean NOT NULL DEFAULT false,
+    "createdAt" int8 NOT NULL DEFAULT 0,
+    "updatedAt" int8 NOT NULL DEFAULT 0,
+    "readAt" int8,
+    "startedAt" int8,
+    "completedAt" int8
+);
+
+-- Vypnutí zabezpečovací propustky po dobu vývoje pro okamžitý přístup
+ALTER TABLE public.users DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.tasks DISABLE ROW LEVEL SECURITY;
+
+-- ======== ZMĚNY: 22.04.2026 ========
+-- Aktualizační balíček pro přidání telefonů, emailu a adresy (DOPORUČENÁ CESTA MÍSTO DROP TABLE)
+ALTER TABLE public.tasks ADD COLUMN IF NOT EXISTS "customerPhone" text NOT NULL DEFAULT '';
+ALTER TABLE public.tasks ADD COLUMN IF NOT EXISTS "customerEmail" text NOT NULL DEFAULT '';
+ALTER TABLE public.tasks ADD COLUMN IF NOT EXISTS "customerAddress" text NOT NULL DEFAULT '';
+
+-- ======== ZMĚNY: 23.04.2026 ========
+-- Přidání sloupce pro datum odeslání zpět šéfovi
+ALTER TABLE public.tasks ADD COLUMN IF NOT EXISTS "completedAt" BIGINT DEFAULT NULL;
+ALTER TABLE public.tasks ADD COLUMN IF NOT EXISTS "isDeleted" boolean NOT NULL DEFAULT false;
+ALTER TABLE public.tasks ADD COLUMN IF NOT EXISTS "deletedAt" BIGINT DEFAULT NULL;
+
+
+> Configure project :shared
+w: The following Kotlin/Native targets cannot be built on this machine and are disabled:
+iosArm64, iosSimulatorArm64, iosX64
+To hide this message, add 'kotlin.native.ignoreDisabledTargets=true' to the Gradle properties.
+
+w: The Default Kotlin Hierarchy Template was not applied to 'project ':shared'':
+Explicit .dependsOn() edges were configured for the following source sets:
+[iosArm64Main, iosMain, iosSimulatorArm64Main, iosX64Main]
+
+Consider removing dependsOn-calls or disabling the default template by adding
+    'kotlin.mpp.applyDefaultHierarchyTemplate=false'
+to your gradle.properties
+
+Learn more about hierarchy templates: https://kotl.in/hierarchy-template
+
+
+> Task :desktopApp:checkKotlinGradlePluginConfigurationErrors
+> Task :shared:checkKotlinGradlePluginConfigurationErrors
+> Task :shared:compileKotlinDesktop UP-TO-DATE
+> Task :shared:desktopProcessResources UP-TO-DATE
+> Task :shared:desktopMainClasses UP-TO-DATE
+> Task :shared:desktopJar
+> Task :desktopApp:jvmProcessResources NO-SOURCE
+> Task :desktopApp:prepareAppResources NO-SOURCE
+> Task :desktopApp:compileKotlinJvm
+> Task :desktopApp:jvmMainClasses
+> Task :desktopApp:jvmJar UP-TO-DATE
+
+> Task :desktopApp:run
+ÔÜá´ŞĆ Po startu detekujeme neodeslan├í data z minula! Prov├íd├şm nejprve push (pokus 1).
+Pokus 1 selhal: Push failnul, odkl├íd├ím stahov├ín├ş aby nedo┼ílo k p┼Öeps├ín├ş.. Zkou┼í├şm znovu za 5s...
+Info: (Core) SupabaseClient created! Please report any bugs you find.
+Ôťů ├Üsp─Ť┼ín─Ť odesl├íno do cloudu (bez bin├írn├şch fotek).
+Stahov├ín├ş dat ze Supabase cloudu... (pokus 2)
+Ôťů Cloud sync OK ÔÇö sta┼żeno 9 zak├ízek, 3 u┼żivatel┼». Dogenerov├íno notifikac├ş: 0
+Ôťů Dne┼ín├ş automatick├í z├íloha ji┼ż existuje (2026-04-23), p┼Öeskakuji.
+­čŚĹ´ŞĆ Zak├ízka '┼ákoda Octavia Combi - 2010 - 2.0 TDI (CR)' p┼Öesunuta do ko┼íe.
+­čöä Polling zachytil neodeslan├í lok├íln├ş data! Spou┼ít├şm z├íchrann├Ż upload m├şsto stahov├ín├ş.
+Ôťů ├Üsp─Ť┼ín─Ť odesl├íno do cloudu (bez bin├írn├şch fotek).
+Ôťů ├Üsp─Ť┼ín─Ť odesl├íno do cloudu (bez bin├írn├şch fotek).
+ÔĆŞ Polling p┼Öesko─Źen ÔÇö ─Źerstv├ę lok├íln├ş zm─Ťny (6526ms ago), d├ím push ─Źas.
+ÔĆŞ Polling p┼Öesko─Źen ÔÇö ─Źerstv├ę lok├íln├ş zm─Ťny (11529ms ago), d├ím push ─Źas.
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.2.1/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 2m 5s
+8 actionable tasks: 5 executed, 3 up-to-date
