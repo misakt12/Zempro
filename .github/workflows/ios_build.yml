@@ -23,11 +23,6 @@ jobs:
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v3
 
-    - name: Build Shared Kotlin Module
-      run: |
-        chmod +x gradlew
-        ./gradlew :shared:embedAndSignAppleFrameworkForXcode
-
     - name: Build iOS App (Unsigned)
       run: |
         cd iosApp
