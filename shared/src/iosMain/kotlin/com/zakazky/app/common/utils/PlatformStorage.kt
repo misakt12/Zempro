@@ -76,7 +76,7 @@ actual fun printInvoice(htmlContent: String, taskName: String) {
         ) {
             val printController = UIPrintInteractionController.sharedPrintController
             val printInfo = UIPrintInfo.printInfo()
-            printInfo.outputType = UIPrintInfoOutputGeneral
+            printInfo.outputType = UIPrintInfoOutputType.UIPrintInfoOutputGeneral
             printInfo.jobName = taskName
             printController.printInfo = printInfo
             printController.printFormatter = webView.viewPrintFormatter()
