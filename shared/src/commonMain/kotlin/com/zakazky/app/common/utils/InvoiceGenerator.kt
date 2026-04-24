@@ -268,7 +268,7 @@ suspend fun generateInvoiceHtml(task: Task): String {
                     <div>Opravu převzal:</div>
                     <div style="text-align: center;">
                         <!-- QR Platba — Česká platební norma SPD, upravte IBAN v kódu InvoiceGenerator.kt -->
-                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=SPD*1.0*ACC:CZ0800000000123456789*AM:${String.format("%.2f", totalPrice)}*CC:CZK*MSG:FAKTURA%20${task.id}" style="border:1px solid #ccc;padding:5px;background:white;" alt="QR Platba" />
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=SPD*1.0*ACC:CZ0800000000123456789*AM:${totalPrice}*CC:CZK*MSG:FAKTURA%20${task.id}" style="border:1px solid #ccc;padding:5px;background:white;" alt="QR Platba" />
                         <div style="font-size: 11px; color: #4CAF50; margin-top:2px;">QR Platba (upravit IBAN: CZ0800000000123456789)</div>
                     </div>
                     <div style="margin-right: 70px;">Placeno dne:</div>

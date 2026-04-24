@@ -1,3 +1,4 @@
+@file:OptIn(kotlinx.cinterop.ExperimentalForeignApi::class)
 package com.zakazky.app.common.utils
 
 import androidx.compose.runtime.*
@@ -6,6 +7,8 @@ import platform.CoreGraphics.*
 import platform.Foundation.*
 import platform.UIKit.*
 import platform.Photos.*
+import platform.darwin.NSObject
+import platform.posix.memcpy
 
 // ── Globální callback pro předání výsledku zpět do Compose ───────────────────
 private var pendingMediaCallback: ((ByteArray?) -> Unit)? = null
@@ -64,7 +67,7 @@ private fun compressUIImage(image: UIImage): ByteArray? {
     val length = nsData.length.toInt()
     val bytes = ByteArray(length)
     bytes.usePinned { pinned ->
-        memcpy(pinned.addressOf(0), nsData.bytes, nsData.length)
+        memcpy(pinned.addressOf(0), nsData.bytes, nsData.length.toULong())
     }
     return bytes
 }

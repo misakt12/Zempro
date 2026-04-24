@@ -1,3 +1,4 @@
+@file:OptIn(kotlinx.cinterop.ExperimentalForeignApi::class)
 package com.zakazky.app.common.utils
 
 import androidx.compose.runtime.*
@@ -5,12 +6,13 @@ import kotlinx.cinterop.*
 import platform.Foundation.*
 import platform.UIKit.*
 import platform.UniformTypeIdentifiers.*
+import platform.darwin.NSObject
+import platform.posix.memcpy
 
 // ── Globální callback ────────────────────────────────────────────────────────
 private var pendingDocumentCallback: ((String, ByteArray) -> Unit)? = null
 
 // ── UIDocumentPickerViewController delegate ──────────────────────────────────
-@OptIn(ExperimentalForeignApi::class)
 private class DocumentPickerDelegate : NSObject(), UIDocumentPickerDelegateProtocol {
 
     override fun documentPicker(
@@ -33,7 +35,7 @@ private class DocumentPickerDelegate : NSObject(), UIDocumentPickerDelegateProto
             val length = data.length.toInt()
             val bytes = ByteArray(length)
             bytes.usePinned { pinned ->
-                memcpy(pinned.addressOf(0), data.bytes, data.length)
+                memcpy(pinned.addressOf(0), data.bytes, data.length.toULong())
             }
             pendingDocumentCallback?.invoke(fileName, bytes)
         } finally {
@@ -63,10 +65,13 @@ actual fun rememberDocumentManager(onResult: (String, ByteArray) -> Unit): Docum
                 pendingDocumentCallback = { name, bytes -> callbackRef.value(name, bytes) }
 
                 // Povolíme všechny typy dokumentů (PDF, DOCX, obrázky…)
-                val picker = if (NSProcessInfo.processInfo.isOperatingSystemAtLeastVersion(
-                        NSOperatingSystemVersion(14.toLong(), 0.toLong(), 0.toLong())
-                    )
-                ) {
+                val version = cValue<NSOperatingSystemVersion> {
+                    majorVersion = 14
+                    minorVersion = 0
+                    patchVersion = 0
+                }
+                
+                val picker = if (NSProcessInfo.processInfo.isOperatingSystemAtLeastVersion(version)) {
                     // iOS 14+ — UTType API
                     UIDocumentPickerViewController(forOpeningContentTypes = listOf(UTTypeItem), asCopy = true)
                 } else {

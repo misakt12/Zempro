@@ -1,9 +1,9 @@
+@file:OptIn(kotlinx.cinterop.ExperimentalForeignApi::class)
 package com.zakazky.app.common.utils
 
 import platform.Foundation.*
 import platform.UIKit.*
-
-// ── iOS BackupManager ────────────────────────────────────────────────────────
+import platform.darwin.NSObject
 // iOS používá UIDocumentPickerViewController pro import/export přes Files app.
 
 // Globální callback pro import zálohy

@@ -1,3 +1,4 @@
+@file:OptIn(kotlinx.cinterop.ExperimentalForeignApi::class)
 package com.zakazky.app.common.utils
 
 import androidx.compose.runtime.*
