@@ -111,7 +111,7 @@ actual fun openEmailClient(to: String, subject: String, body: String, attachment
             }
 
             // Zavíracím tlačítkem dismiss
-            mailVC.mailComposeDelegate = IosMailDelegate.shared
+            mailVC.mailComposeDelegate = iosMailDelegate
             rootVC.presentViewController(mailVC, animated = true, completion = null)
         } else {
             // Mail.app není nastaven — otevřeme mailto: link jako fallback
@@ -148,9 +148,10 @@ actual fun playNotificationSound(storage: PlatformStorage) {
     AudioServicesPlaySystemSound(1007u)
 }
 
+private val iosMailDelegate = IosMailDelegate()
+
 // ── Mail delegate — zavře MFMailComposeViewController po odeslání/zrušení ────
 class IosMailDelegate : NSObject(), MFMailComposeViewControllerDelegateProtocol {
-    companion object { val shared = IosMailDelegate() }
 
     override fun mailComposeController(
         controller: MFMailComposeViewController,

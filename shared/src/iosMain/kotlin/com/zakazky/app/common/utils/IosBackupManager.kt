@@ -53,7 +53,7 @@ actual fun importBackup(onResult: (String?) -> Unit) {
             documentTypes = listOf("public.json", "public.text", "public.data"),
             inMode = UIDocumentPickerMode.UIDocumentPickerModeOpen
         )
-        picker.delegate = IosBackupPickerDelegate.shared
+        picker.delegate = iosBackupPickerDelegate
         picker.allowsMultipleSelection = false
 
         rootVC.presentViewController(picker, animated = true, completion = null)
@@ -68,11 +68,10 @@ actual fun startAutoBackup(getJsonData: () -> String) {
     // No-op na iOS — záloha probíhá ručně přes exportBackup()
 }
 
+private val iosBackupPickerDelegate = IosBackupPickerDelegate()
+
 // ── Delegate pro import zálohy ────────────────────────────────────────────────
 class IosBackupPickerDelegate : NSObject(), UIDocumentPickerDelegateProtocol {
-    companion object {
-        val shared = IosBackupPickerDelegate()
-    }
 
     override fun documentPicker(
         controller: UIDocumentPickerViewController,
