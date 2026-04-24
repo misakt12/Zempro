@@ -40,6 +40,7 @@ jobs:
           -configuration Release \
           -sdk iphoneos \
           -destination 'generic/platform=iOS' \
+          SYMROOT=${PWD}/build \
           CODE_SIGN_IDENTITY="" \
           CODE_SIGNING_REQUIRED=NO \
           CODE_SIGNING_ALLOWED=NO \
@@ -58,8 +59,8 @@ jobs:
         cd iosApp
         # Vytvoření složky Payload (nutné pro .ipa strukturu)
         mkdir -p build/Payload
-        # Zkopírování zkompilované appky
-        cp -R build/Release-iphoneos/iosApp.app build/Payload/
+        # Zkopírování zkompilované appky (použijeme *.app pro jistotu)
+        cp -R build/Release-iphoneos/*.app build/Payload/
         # Zabalení do .ipa souboru
         cd build
         zip -qr zempro-ios-unsigned.ipa Payload/
