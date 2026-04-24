@@ -8,6 +8,7 @@ import platform.Foundation.*
 import platform.MessageUI.*
 import platform.UIKit.*
 import platform.WebKit.*
+import platform.posix.memcpy
 
 actual class PlatformStorage
 
@@ -51,12 +52,13 @@ actual fun encodeBase64(byteArray: ByteArray): String {
 actual fun decodeBase64(string: String): ByteArray {
     if (string.isEmpty()) return ByteArray(0)
     val nsData = NSData.create(base64Encoding = string) ?: return ByteArray(0)
-    val bytes = nsData.bytes?.reinterpret<ByteVar>() ?: return ByteArray(0)
-    val array = ByteArray(nsData.length.toInt())
-    for (i in array.indices) {
-        array[i] = bytes[i]
+    val length = nsData.length.toInt()
+    if (length == 0) return ByteArray(0)
+    val bytes = ByteArray(length)
+    bytes.usePinned { pinned ->
+        memcpy(pinned.addressOf(0), nsData.bytes, nsData.length.toULong())
     }
-    return array
+    return bytes
 }
 
 actual fun printInvoice(htmlContent: String, taskName: String) {
@@ -74,7 +76,7 @@ actual fun printInvoice(htmlContent: String, taskName: String) {
         ) {
             val printController = UIPrintInteractionController.sharedPrintController
             val printInfo = UIPrintInfo.printInfo()
-            printInfo.outputType = UIPrintInfoOutputType.UIPrintInfoOutputTypeGeneral
+            printInfo.outputType = UIPrintInfoOutputGeneral
             printInfo.jobName = taskName
             printController.printInfo = printInfo
             printController.printFormatter = webView.viewPrintFormatter()
