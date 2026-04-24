@@ -25,6 +25,9 @@ jobs:
 
     - name: Build iOS App (Unsigned)
       run: |
+        # Oprava oprávnění pro gradlew
+        chmod +x gradlew
+        
         cd iosApp
         # Odemkneme keychain (i když není podepsáno, xcodebuild to občas vyžaduje)
         security create-keychain -p "" build.keychain
@@ -38,6 +41,7 @@ jobs:
           -scheme iosApp \
           -configuration Release \
           -sdk iphoneos \
+          -destination 'generic/platform=iOS' \
           CODE_SIGN_IDENTITY="" \
           CODE_SIGNING_REQUIRED=NO \
           CODE_SIGNING_ALLOWED=NO \
