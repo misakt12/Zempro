@@ -25,6 +25,7 @@ jobs:
 
     - name: Build iOS App (Unsigned)
       run: |
+        chmod +x gradlew
         cd iosApp
         # Odemkneme keychain (i když není podepsáno, xcodebuild to občas vyžaduje)
         security create-keychain -p "" build.keychain
