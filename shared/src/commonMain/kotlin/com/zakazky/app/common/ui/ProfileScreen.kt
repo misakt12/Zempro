@@ -55,7 +55,7 @@ fun ProfileScreen(onBack: () -> Unit, onLogout: () -> Unit) {
     Column(modifier = Modifier.fillMaxSize().background(Navy900)) {
 
         // ── TopAppBar ──
-        Box(modifier = Modifier.fillMaxWidth().background(Brush.horizontalGradient(listOf(PrimaryGradientStart, PrimaryGradientEnd)))) {
+        Box(modifier = Modifier.fillMaxWidth().background(Brush.horizontalGradient(listOf(PrimaryGradientStart, PrimaryGradientEnd))).windowInsetsPadding(WindowInsets.statusBars)) {
             TopAppBar(
                 title = { Text("Můj Profil", fontWeight = FontWeight.Bold, color = Blue50) },
                 navigationIcon = {

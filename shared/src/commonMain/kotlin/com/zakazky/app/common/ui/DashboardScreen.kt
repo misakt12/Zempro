@@ -81,6 +81,7 @@ fun DashboardScreen(
             Box(
                 modifier = Modifier.fillMaxWidth()
                     .background(Brush.horizontalGradient(listOf(PrimaryGradientStart, PrimaryGradientEnd)))
+                    .windowInsetsPadding(WindowInsets.statusBars)
             ) {
                 TopAppBar(
                     title = {
