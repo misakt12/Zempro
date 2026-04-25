@@ -236,7 +236,7 @@ object AppDatabase {
             // Nekonečná polling smyčka — každých 8s zkontroluje změny
             // Každý cyklus má vlastní try-catch, takže výpadek neukončí celou smyčku
             while (true) {
-                kotlinx.coroutines.delay(5000)  // 5s polling místo 8s — rychlejší notifikace na PC
+                kotlinx.coroutines.delay(10000)  // 10s polling — redukce zápisů do UI stavu
                 
                 // Pokud nám visí neodeslaná data (např. timeout minulý cyklus), nesmíme 
                 // data z cloudu tahat a přepisovat! Musíme to znovu zkusit poslat.
@@ -377,13 +377,25 @@ object AppDatabase {
                             }
                         }
 
-                        // ATOMICKÉ: VŠECHNY mutace SnapshotStateList na Main vlákně najednou
+                        // KRITICKÉ: Chirurgická aktualizace — NE clear()+addAll()!
+                        // clear()+addAll() způsobuje překreslení celého UI (scroll jank, blikání).
+                        // Místo toho aktualizujeme pouze ZMĚNĚNÉ zakázky.
                         withContext(Dispatchers.Main) {
-                            tasks.clear()
-                            tasks.addAll(bgTasks)
+                            // Přidej nebo uprav zakázky
+                            bgTasks.forEach { newTask ->
+                                val idx = tasks.indexOfFirst { it.id == newTask.id }
+                                if (idx == -1) {
+                                    tasks.add(newTask)          // nová zakázka
+                                } else if (tasks[idx] != newTask) {
+                                    tasks[idx] = newTask        // změněná zakázka
+                                }
+                            }
+                            // Odstraň zakázky které v cloudu už nejsou
+                            val cloudIds = bgTasks.map { it.id }.toSet()
+                            tasks.removeAll { it.id !in cloudIds }
+                            
                             if (newNotifs.isNotEmpty()) {
                                 notifications.addAll(newNotifs)
-                                // Přehraj zvuk pokud notifikace patří tomuto uživateli a má příznak
                                 val hasSound = newNotifs.any { it.shouldPlaySound && it.targetUserId == currentId }
                                 if (hasSound) {
                                     val s = storage

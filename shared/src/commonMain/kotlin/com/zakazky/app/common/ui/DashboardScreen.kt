@@ -515,10 +515,8 @@ private fun AdminContent(
             }
         }
     } else if (isAdmin && selectedTab == 2) {
-        // Zakázníci: smazané zakázky NEzobrazujeme
-        val nonDeletedTasks = androidx.compose.runtime.snapshots.SnapshotStateList<Task>().also { list ->
-            list.addAll(tasks.filter { !it.isDeleted })
-        }
+        // Zákazníci: stabilní filtrovaný list — NE nový SnapshotStateList při každém renderování
+        val nonDeletedTasks = remember(tasks.size) { tasks.filter { !it.isDeleted } }
         CustomersScreen(tasks = nonDeletedTasks, onPrefillAddDialog = onPrefillAddDialog, onTaskClick = onTaskClick)
     } else if (isAdmin && selectedTab == 4) {
         EmployeeManagement()
