@@ -114,13 +114,13 @@ fun EmployeeManagement() {
                     Column(modifier = Modifier.weight(1f).fillMaxHeight()) {
                         Text("Aktuální zaměstnanci", color = Blue200, fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom = 8.dp))
                         LazyColumn(contentPadding = PaddingValues(bottom = 24.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                            items(activeUsers) { user -> EmployeeCard(user, { onEditUser(user) }, { onToggleStatus(user) }) }
+                            items(activeUsers, key = { it.id }) { user -> EmployeeCard(user, { onEditUser(user) }, { onToggleStatus(user) }) }
                         }
                     }
                     Column(modifier = Modifier.weight(1f).fillMaxHeight()) {
                         Text("Bývalí zaměstnanci (Historie)", color = Slate400, fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom = 8.dp))
                         LazyColumn(contentPadding = PaddingValues(bottom = 24.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                            items(historyUsers) { user -> EmployeeCard(user, { onEditUser(user) }, { onToggleStatus(user) }) }
+                            items(historyUsers, key = { it.id }) { user -> EmployeeCard(user, { onEditUser(user) }, { onToggleStatus(user) }) }
                         }
                     }
                 }
@@ -131,11 +131,11 @@ fun EmployeeManagement() {
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     item { Text("Aktuální zaměstnanci", color = Blue200, fontWeight = FontWeight.Bold) }
-                    items(activeUsers) { user -> EmployeeCard(user, { onEditUser(user) }, { onToggleStatus(user) }) }
+                    items(activeUsers, key = { it.id }) { user -> EmployeeCard(user, { onEditUser(user) }, { onToggleStatus(user) }) }
                     if (historyUsers.isNotEmpty()) {
                         item { Spacer(Modifier.height(8.dp)) }
                         item { Text("Historie", color = Slate400, fontWeight = FontWeight.Bold) }
-                        items(historyUsers) { user -> EmployeeCard(user, { onEditUser(user) }, { onToggleStatus(user) }) }
+                        items(historyUsers, key = { it.id }) { user -> EmployeeCard(user, { onEditUser(user) }, { onToggleStatus(user) }) }
                     }
                 }
             }

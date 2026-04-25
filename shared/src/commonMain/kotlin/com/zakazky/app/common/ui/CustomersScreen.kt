@@ -155,7 +155,7 @@ fun CustomerSearchBox(query: String, onQueryChange: (String) -> Unit) {
 @Composable
 fun CustomerList(profiles: List<CustomerProfile>, selected: CustomerProfile?, onSelect: (CustomerProfile) -> Unit) {
     LazyColumn(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        items(profiles) { profile ->
+        items(profiles, key = { it.id }) { profile ->
             val isSelected = selected == profile
             Card(
                 modifier = Modifier.fillMaxWidth().clickable { onSelect(profile) }.border(1.dp, Navy700, RoundedCornerShape(12.dp)),
@@ -240,7 +240,7 @@ fun CustomerDetail(
                 Spacer(Modifier.height(16.dp))
             }
             
-            items(profile.garageVehicles) { vehicle ->
+            items(profile.garageVehicles, key = { it.id }) { vehicle ->
                 Card(
                     modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp).border(1.dp, Navy700, RoundedCornerShape(12.dp)),
                     shape = RoundedCornerShape(12.dp),
@@ -276,7 +276,7 @@ fun CustomerDetail(
                 Spacer(Modifier.height(16.dp))
             }
             
-            items(profile.historyTasks) { task ->
+            items(profile.historyTasks, key = { it.id }) { task ->
                 Card(
                     modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp).clickable { onTaskClick(task) },
                     shape = RoundedCornerShape(8.dp),

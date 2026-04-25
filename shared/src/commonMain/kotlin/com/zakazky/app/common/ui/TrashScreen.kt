@@ -89,7 +89,7 @@ fun TrashScreen(
                 contentPadding = PaddingValues(vertical = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                items(deletedTasks) { task ->
+                items(deletedTasks, key = { it.id }) { task ->
                     TrashTaskCard(
                         task = task,
                         onRestore = { AppDatabase.restoreTask(task.id) },

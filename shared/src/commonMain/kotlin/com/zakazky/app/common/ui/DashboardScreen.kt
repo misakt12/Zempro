@@ -459,18 +459,22 @@ private fun AdminContent(
     onPrefillAddDialog: (com.zakazky.app.common.models.CustomerProfile?, com.zakazky.app.common.models.Task?) -> Unit
 ) {
     if (selectedTab == 0 || selectedTab == 1 || selectedTab == 3) {
-        val filteredTasks = tasks.filter { task ->
-            val isForMe = isAdmin || task.status == TaskStatus.AVAILABLE || task.assignedTo == currentUserId
-            val isCorrectTab = when (selectedTab) {
-                // Tab 0 a 1: smazané zakázky nezobrazujeme
-                0 -> task.status != TaskStatus.COMPLETED && !task.isDeleted
-                1 -> if (isAdmin) task.status == TaskStatus.COMPLETED && !task.isInvoiceClosed && !task.isDeleted
-                     else task.status == TaskStatus.COMPLETED && !task.isDeleted
-                // Tab 3 (Faktury): ZOBRAZUJEME i smazané — budou označeny červeným štítkem
-                3 -> task.isInvoiceClosed
-                else -> false
+        val filteredTasks by remember(selectedTab, currentUserId, isAdmin) {
+            derivedStateOf {
+                tasks.filter { task ->
+                    val isForMe = isAdmin || task.status == TaskStatus.AVAILABLE || task.assignedTo == currentUserId
+                    val isCorrectTab = when (selectedTab) {
+                        // Tab 0 a 1: smazané zakázky nezobrazujeme
+                        0 -> task.status != TaskStatus.COMPLETED && !task.isDeleted
+                        1 -> if (isAdmin) task.status == TaskStatus.COMPLETED && !task.isInvoiceClosed && !task.isDeleted
+                             else task.status == TaskStatus.COMPLETED && !task.isDeleted
+                        // Tab 3 (Faktury): ZOBRAZUJEME i smazané — budou označeny červeným štítkem
+                        3 -> task.isInvoiceClosed
+                        else -> false
+                    }
+                    isForMe && isCorrectTab
+                }
             }
-            isForMe && isCorrectTab
         }
 
         Column(modifier = Modifier.fillMaxSize()) {
@@ -505,7 +509,7 @@ private fun AdminContent(
                 contentPadding = PaddingValues(bottom = 24.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                items(filteredTasks) { task ->
+                items(filteredTasks, key = { it.id }) { task ->
                     TaskCard(task = task, onClick = { onTaskClick(task) }, isAdmin = isAdmin)
                 }
             }
