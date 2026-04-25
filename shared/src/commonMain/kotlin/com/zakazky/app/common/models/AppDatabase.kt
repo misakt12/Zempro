@@ -381,19 +381,32 @@ object AppDatabase {
                         // clear()+addAll() způsobuje překreslení celého UI (scroll jank, blikání).
                         // Místo toho aktualizujeme pouze ZMĚNĚNÉ zakázky.
                         withContext(Dispatchers.Main) {
-                            // Přidej nebo uprav zakázky
+                            // Přidej nebo uprav zakázky (pouze pokud se logicky změnily)
                             bgTasks.forEach { newTask ->
                                 val idx = tasks.indexOfFirst { it.id == newTask.id }
                                 if (idx == -1) {
                                     tasks.add(newTask)          // nová zakázka
-                                } else if (tasks[idx] != newTask) {
-                                    tasks[idx] = newTask        // změněná zakázka
+                                } else {
+                                    val old = tasks[idx]
+                                    // Porovnáváme POUZE pole bez ByteArray (ty nelze porovnat referenčně)
+                                    val changed = old.status != newTask.status ||
+                                        old.assignedTo != newTask.assignedTo ||
+                                        old.isInvoiceClosed != newTask.isInvoiceClosed ||
+                                        old.isDeleted != newTask.isDeleted ||
+                                        old.title != newTask.title ||
+                                        old.description != newTask.description ||
+                                        old.invoiceItems.size != newTask.invoiceItems.size ||
+                                        old.timeLogs.size != newTask.timeLogs.size ||
+                                        old.localPhotos.size != newTask.localPhotos.size
+                                    if (changed) {
+                                        tasks[idx] = newTask    // aktualizuj jen změněnou
+                                    }
                                 }
                             }
                             // Odstraň zakázky které v cloudu už nejsou
                             val cloudIds = bgTasks.map { it.id }.toSet()
                             tasks.removeAll { it.id !in cloudIds }
-                            
+
                             if (newNotifs.isNotEmpty()) {
                                 notifications.addAll(newNotifs)
                                 val hasSound = newNotifs.any { it.shouldPlaySound && it.targetUserId == currentId }
