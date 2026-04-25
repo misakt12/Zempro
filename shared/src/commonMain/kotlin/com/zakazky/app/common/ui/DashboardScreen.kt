@@ -540,7 +540,7 @@ fun TaskCard(task: Task, onClick: () -> Unit, isAdmin: Boolean) {
     }
 
     Card(
-        modifier = Modifier.fillMaxWidth().clickable(onClick = onClick).shadow(4.dp, RoundedCornerShape(16.dp)),
+        modifier = Modifier.fillMaxWidth().clickable(onClick = onClick).border(1.dp, Navy700, RoundedCornerShape(16.dp)),
         shape = RoundedCornerShape(16.dp),
         backgroundColor = if (task.isDeleted) ErrorDark.copy(alpha = 0.08f) else Navy800,
         elevation = 0.dp

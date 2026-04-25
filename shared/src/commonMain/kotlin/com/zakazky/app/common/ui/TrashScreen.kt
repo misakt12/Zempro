@@ -164,7 +164,7 @@ private fun TrashTaskCard(
     onDeletePermanently: () -> Unit
 ) {
     Card(
-        modifier = Modifier.fillMaxWidth().shadow(2.dp, RoundedCornerShape(16.dp)),
+        modifier = Modifier.fillMaxWidth().border(1.dp, Navy700, RoundedCornerShape(16.dp)),
         shape = RoundedCornerShape(16.dp),
         backgroundColor = Navy800.copy(alpha = 0.7f),
         elevation = 0.dp

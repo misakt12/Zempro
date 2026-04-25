@@ -158,7 +158,7 @@ fun CustomerList(profiles: List<CustomerProfile>, selected: CustomerProfile?, on
         items(profiles) { profile ->
             val isSelected = selected == profile
             Card(
-                modifier = Modifier.fillMaxWidth().clickable { onSelect(profile) }.shadow(2.dp, RoundedCornerShape(12.dp)),
+                modifier = Modifier.fillMaxWidth().clickable { onSelect(profile) }.border(1.dp, Navy700, RoundedCornerShape(12.dp)),
                 shape = RoundedCornerShape(12.dp),
                 backgroundColor = if (isSelected) Blue600.copy(alpha=0.3f) else Navy800,
                 border = if (isSelected) androidx.compose.foundation.BorderStroke(1.dp, Blue500) else null
@@ -242,7 +242,7 @@ fun CustomerDetail(
             
             items(profile.garageVehicles) { vehicle ->
                 Card(
-                    modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp).shadow(2.dp, RoundedCornerShape(12.dp)),
+                    modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp).border(1.dp, Navy700, RoundedCornerShape(12.dp)),
                     shape = RoundedCornerShape(12.dp),
                     backgroundColor = Navy800
                 ) {
