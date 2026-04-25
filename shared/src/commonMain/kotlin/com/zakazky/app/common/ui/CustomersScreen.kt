@@ -15,7 +15,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -189,112 +188,139 @@ fun CustomerDetail(
     onNewTaskForCar: (Task) -> Unit,
     onTaskClick: (Task) -> Unit
 ) {
-    Column(modifier = Modifier.fillMaxSize().background(Navy900)) {
+    LazyColumn(modifier = Modifier.fillMaxSize().background(Navy900)) {
         // Hlavička
-        Row(
-            modifier = Modifier.fillMaxWidth().background(Navy800).padding(if (isWide) 24.dp else 16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            if (!isWide) {
-                IconButton(onClick = onClose) { Icon(Icons.Default.ArrowBack, contentDescription = "Zpět", tint = Blue50) }
-                Spacer(Modifier.width(8.dp))
-            }
-            Box(modifier = Modifier.size(56.dp).clip(CircleShape).background(Blue600), contentAlignment = Alignment.Center) {
-                val initial = profile.name.take(1).uppercase()
-                Text(initial, color = Color.White, fontWeight = FontWeight.Bold, fontSize = 24.sp)
-            }
-            Spacer(Modifier.width(16.dp))
-            Column(modifier = Modifier.weight(1f)) {
-                Text(profile.name, color = Color.White, fontWeight = FontWeight.Bold, fontSize = 24.sp)
-                Spacer(Modifier.height(4.dp))
-                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                    if (profile.phone.isNotBlank()) ContactItem(Icons.Default.Phone, profile.phone)
-                    if (profile.email.isNotBlank()) ContactItem(Icons.Default.Email, profile.email)
+        item {
+            Row(
+                modifier = Modifier.fillMaxWidth().background(Navy800).padding(if (isWide) 24.dp else 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if (!isWide) {
+                    IconButton(onClick = onClose) { Icon(Icons.Default.ArrowBack, contentDescription = "Zpět", tint = Blue50) }
+                    Spacer(Modifier.width(8.dp))
                 }
-                if (profile.address.isNotBlank()) {
+                Box(modifier = Modifier.size(56.dp).background(Blue600, CircleShape), contentAlignment = Alignment.Center) {
+                    val initial = profile.name.take(1).uppercase()
+                    Text(initial, color = Color.White, fontWeight = FontWeight.Bold, fontSize = 24.sp)
+                }
+                Spacer(Modifier.width(16.dp))
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(profile.name, color = Color.White, fontWeight = FontWeight.Bold, fontSize = 24.sp)
                     Spacer(Modifier.height(4.dp))
-                    ContactItem(Icons.Default.LocationOn, profile.address)
+                    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                        if (profile.phone.isNotBlank()) ContactItem(Icons.Default.Phone, profile.phone)
+                        if (profile.email.isNotBlank()) ContactItem(Icons.Default.Email, profile.email)
+                    }
+                    if (profile.address.isNotBlank()) {
+                        Spacer(Modifier.height(4.dp))
+                        ContactItem(Icons.Default.LocationOn, profile.address)
+                    }
                 }
-            }
-            if (isWide) {
-                IconButton(onClick = onClose) { Icon(Icons.Default.Close, contentDescription = "Zavřít", tint = Slate400) }
+                if (isWide) {
+                    IconButton(onClick = onClose) { Icon(Icons.Default.Close, contentDescription = "Zavřít", tint = Slate400) }
+                }
             }
         }
-        
-        LazyColumn(modifier = Modifier.fillMaxSize().padding(if (isWide) 24.dp else 16.dp)) {
-            // Garáž
-            item {
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                    Text("Garáž", color = Blue50, fontWeight = FontWeight.Bold, fontSize = 20.sp)
-                    Button(
-                        onClick = onAddCar,
-                        colors = ButtonDefaults.buttonColors(backgroundColor = ZemproGreen),
-                        shape = RoundedCornerShape(8.dp),
-                        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)
-                    ) {
-                        Icon(Icons.Default.Add, contentDescription = null, tint = Color.White, modifier = Modifier.size(16.dp))
-                        Spacer(Modifier.width(8.dp))
-                        Text("Přijel s novým", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 12.sp)
-                    }
-                }
-                Spacer(Modifier.height(16.dp))
-            }
-            
-            items(profile.garageVehicles, key = { it.id }) { vehicle ->
-                Card(
-                    modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp).border(1.dp, Navy700, RoundedCornerShape(12.dp)),
-                    shape = RoundedCornerShape(12.dp),
-                    backgroundColor = Navy800
-                ) {
-                    Row(modifier = Modifier.fillMaxWidth().padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
-                        Column(modifier = Modifier.weight(1f)) {
-                            val brandAndModel = "${vehicle.brand} ${vehicle.title.split(" - ").firstOrNull() ?: ""}".trim()
-                            Text(brandAndModel.takeIf { it.isNotBlank() } ?: "Vozidlo bez modelu", color = Blue50, fontWeight = FontWeight.Bold, fontSize = 16.sp)
-                            Spacer(Modifier.height(4.dp))
-                            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                                if (vehicle.spz.isNotBlank()) InfoChip(Icons.Default.Info, vehicle.spz)
-                                if (vehicle.vin?.isNotBlank() == true) InfoChip(Icons.Default.Settings, vehicle.vin)
-                            }
-                        }
-                        Spacer(Modifier.width(12.dp))
-                        Button(
-                            onClick = { onNewTaskForCar(vehicle) },
-                            colors = ButtonDefaults.buttonColors(backgroundColor = Blue600),
-                            shape = RoundedCornerShape(8.dp)
-                        ) {
-                            Text("Nová zakázka", color = Color.White, fontWeight = FontWeight.Bold)
-                        }
-                    }
-                }
-            }
-            
-            item {
-                Spacer(Modifier.height(24.dp))
-                Divider(color = Navy700)
-                Spacer(Modifier.height(24.dp))
-                Text("Historie zakázek", color = Blue50, fontWeight = FontWeight.Bold, fontSize = 20.sp)
-                Spacer(Modifier.height(16.dp))
-            }
-            
-            items(profile.historyTasks, key = { it.id }) { task ->
-                Card(
-                    modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp).clickable { onTaskClick(task) },
+
+        // Garáž header
+        item {
+            Spacer(Modifier.height(16.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(horizontal = if (isWide) 24.dp else 16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text("Garáž", color = Blue50, fontWeight = FontWeight.Bold, fontSize = 20.sp)
+                Button(
+                    onClick = onAddCar,
+                    colors = ButtonDefaults.buttonColors(backgroundColor = ZemproGreen),
                     shape = RoundedCornerShape(8.dp),
-                    backgroundColor = Navy800
+                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)
                 ) {
-                    Row(modifier = Modifier.fillMaxWidth().padding(16.dp), horizontalArrangement = Arrangement.SpaceBetween) {
-                        Column {
-                            Text(task.title, color = Blue50, fontWeight = FontWeight.Bold, fontSize = 14.sp)
-                            Spacer(Modifier.height(4.dp))
-                            Text(formatTimestamp(task.createdAt), color = Slate400, fontSize = 12.sp)
+                    Icon(Icons.Default.Add, contentDescription = null, tint = Color.White, modifier = Modifier.size(16.dp))
+                    Spacer(Modifier.width(8.dp))
+                    Text("Přijel s novým", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                }
+            }
+            Spacer(Modifier.height(16.dp))
+        }
+
+        // Garáž items
+        items(profile.garageVehicles, key = { it.id }) { vehicle ->
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = if (isWide) 24.dp else 16.dp)
+                    .padding(bottom = 12.dp)
+                    .border(1.dp, Navy700, RoundedCornerShape(12.dp)),
+                shape = RoundedCornerShape(12.dp),
+                backgroundColor = Navy800
+            ) {
+                Row(modifier = Modifier.fillMaxWidth().padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        val brandAndModel = "${vehicle.brand} ${vehicle.title.split(" - ").firstOrNull() ?: ""}".trim()
+                        Text(brandAndModel.takeIf { it.isNotBlank() } ?: "Vozidlo bez modelu", color = Blue50, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                        Spacer(Modifier.height(4.dp))
+                        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                            if (vehicle.spz.isNotBlank()) InfoChip(Icons.Default.Info, vehicle.spz)
+                            if (vehicle.vin?.isNotBlank() == true) InfoChip(Icons.Default.Settings, vehicle.vin)
                         }
-                        Box(modifier = Modifier.background(if (task.isInvoiceClosed) SuccessLight.copy(alpha=0.2f) else Navy700, RoundedCornerShape(4.dp)).padding(6.dp)) {
-                            Text(if (task.isInvoiceClosed) "Zaplaceno" else "Otevřeno", color = if (task.isInvoiceClosed) SuccessLight else Slate300, fontSize = 10.sp, fontWeight = FontWeight.Bold)
-                        }
+                    }
+                    Spacer(Modifier.width(12.dp))
+                    Button(
+                        onClick = { onNewTaskForCar(vehicle) },
+                        colors = ButtonDefaults.buttonColors(backgroundColor = Blue600),
+                        shape = RoundedCornerShape(8.dp)
+                    ) {
+                        Text("Nová zakázka", color = Color.White, fontWeight = FontWeight.Bold)
                     }
                 }
             }
         }
+
+        // Historie header
+        item {
+            Spacer(Modifier.height(24.dp))
+            Divider(color = Navy700, modifier = Modifier.padding(horizontal = if (isWide) 24.dp else 16.dp))
+            Spacer(Modifier.height(24.dp))
+            Text("Historie zakázek", color = Blue50, fontWeight = FontWeight.Bold, fontSize = 20.sp,
+                modifier = Modifier.padding(horizontal = if (isWide) 24.dp else 16.dp))
+            Spacer(Modifier.height(16.dp))
+        }
+
+        // Historie items
+        items(profile.historyTasks, key = { it.id }) { task ->
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = if (isWide) 24.dp else 16.dp)
+                    .padding(bottom = 8.dp)
+                    .clickable { onTaskClick(task) },
+                shape = RoundedCornerShape(8.dp),
+                backgroundColor = Navy800
+            ) {
+                Row(modifier = Modifier.fillMaxWidth().padding(16.dp), horizontalArrangement = Arrangement.SpaceBetween) {
+                    Column {
+                        Text(task.title, color = Blue50, fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                        Spacer(Modifier.height(4.dp))
+                        Text(formatTimestamp(task.createdAt), color = Slate400, fontSize = 12.sp)
+                    }
+                    Box(modifier = Modifier.background(
+                        if (task.isInvoiceClosed) SuccessLight.copy(alpha = 0.2f) else Navy700,
+                        RoundedCornerShape(4.dp)
+                    ).padding(6.dp)) {
+                        Text(
+                            if (task.isInvoiceClosed) "Zaplaceno" else "Otevřeno",
+                            color = if (task.isInvoiceClosed) SuccessLight else Slate300,
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+            }
+        }
+
+        item { Spacer(Modifier.height(32.dp)) }
     }
 }
 

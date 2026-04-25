@@ -538,10 +538,12 @@ fun TaskCard(task: Task, onClick: () -> Unit, isAdmin: Boolean) {
         TaskStatus.COMPLETED -> Slate300
     }
 
-    // Jméno přiděleného mechanika (pokud existuje)
-    val assignedMechanicName = remember(task.assignedTo) {
-        task.assignedTo?.let { id -> AppDatabase.users.find { it.id == id }?.name }
-    }
+    // Jméno přiděleného mechanika — cached, nevolá se při každém překreslení
+    val assignedMechanicName = if (task.assignedTo != null) {
+        remember(task.assignedTo) {
+            AppDatabase.users.find { it.id == task.assignedTo }?.name
+        }
+    } else null
 
     Card(
         modifier = Modifier.fillMaxWidth().clickable(onClick = onClick).border(1.dp, Navy700, RoundedCornerShape(16.dp)),
