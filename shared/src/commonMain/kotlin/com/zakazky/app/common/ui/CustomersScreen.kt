@@ -155,7 +155,7 @@ fun CustomerSearchBox(query: String, onQueryChange: (String) -> Unit) {
 @Composable
 fun CustomerList(profiles: List<CustomerProfile>, selected: CustomerProfile?, onSelect: (CustomerProfile) -> Unit) {
     LazyColumn(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        items(profiles, key = { it.id }) { profile ->
+        items(profiles, key = { it.name }) { profile ->
             val isSelected = selected == profile
             Card(
                 modifier = Modifier.fillMaxWidth().clickable { onSelect(profile) }.border(1.dp, Navy700, RoundedCornerShape(12.dp)),
