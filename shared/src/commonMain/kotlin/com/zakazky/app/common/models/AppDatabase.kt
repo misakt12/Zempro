@@ -236,7 +236,7 @@ object AppDatabase {
             // Nekonečná polling smyčka — každých 8s zkontroluje změny
             // Každý cyklus má vlastní try-catch, takže výpadek neukončí celou smyčku
             while (true) {
-                kotlinx.coroutines.delay(10000)  // 10s polling — redukce zápisů do UI stavu
+                kotlinx.coroutines.delay(30000)  // 30s polling — snížení zátěže CPU/síťě (bylo 10s)
                 
                 // Pokud nám visí neodeslaná data (např. timeout minulý cyklus), nesmíme 
                 // data z cloudu tahat a přepisovat! Musíme to znovu zkusit poslat.
@@ -257,7 +257,17 @@ object AppDatabase {
                 try {
                     val oldTasks = tasks.toList()
                     val existingNotifIds = notifications.map { it.id }.toSet()
-                    val bgTasks = SupabaseManager.client.postgrest["tasks"].select().decodeList<Task>()
+                    val bgTasksRaw = SupabaseManager.client.postgrest["tasks"].select().decodeList<Task>()
+
+                    // KLÍČOVÉ: Okamžitě odstraníme binární fotky z původích dat.
+                    // Důvod: fotky mechaniků můžou mít desítky MB. Jejich stahování, parsování
+                    // a dekodóvání base64 každých 30s způsobovalo GPU jitter = pokusování při scrollování!
+                    // Fotky zůstávají uložené lokálně a nepřetečeme je.
+                    val bgTasks = bgTasksRaw.map { it.copy(
+                        taskImages = emptyList(),
+                        localPhotos = emptyList(),
+                        attachedDocuments = emptyList()
+                    )}
 
                     // OPRAVA: Pokud cloud vrátí prázdný seznam, ale lokálně máme zakázky,
                     // jde téměř jistě o Supabase cold-start nebo výpadek sítě.
@@ -267,7 +277,7 @@ object AppDatabase {
                         continue
                     }
 
-                    // Porovnáváme podle klíčových polí (ne celý objekt — ByteArray reference by selhal)
+                    // Porovnáváme pouze textová pole (ne ByteArray — není potřeba, fotky se neuklkládají při pollingu)
                     val hasChanges = bgTasks.size != oldTasks.size || bgTasks.any { newTask ->
                         val oldTask = oldTasks.find { it.id == newTask.id }
                         oldTask == null ||
@@ -275,9 +285,8 @@ object AppDatabase {
                         oldTask.assignedTo != newTask.assignedTo ||
                         oldTask.isInvoiceClosed != newTask.isInvoiceClosed ||
                         oldTask.invoiceItems.size != newTask.invoiceItems.size ||
-                        oldTask.localPhotos.size != newTask.localPhotos.size ||
                         oldTask.timeLogs.size != newTask.timeLogs.size ||
-                        oldTask.isDeleted != newTask.isDeleted  // Koš: detekce soft-delete změny
+                        oldTask.isDeleted != newTask.isDeleted
                     }
 
                     if (bgTasks.isNotEmpty() && hasChanges) {
@@ -396,10 +405,15 @@ object AppDatabase {
                                         old.title != newTask.title ||
                                         old.description != newTask.description ||
                                         old.invoiceItems.size != newTask.invoiceItems.size ||
-                                        old.timeLogs.size != newTask.timeLogs.size ||
-                                        old.localPhotos.size != newTask.localPhotos.size
+                                        old.timeLogs.size != newTask.timeLogs.size
                                     if (changed) {
-                                        tasks[idx] = newTask    // aktualizuj jen změněnou
+                                        // Při aktualizaci zachováme lokálně uložené fotky!
+                                        // Polling je stahuje prázdné, aby neučiněl GC tlak.
+                                        tasks[idx] = newTask.copy(
+                                            localPhotos = old.localPhotos,
+                                            taskImages = old.taskImages,
+                                            attachedDocuments = old.attachedDocuments
+                                        )
                                     }
                                 }
                             }
