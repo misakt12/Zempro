@@ -1426,8 +1426,7 @@ fun InfoChip(icon: androidx.compose.ui.graphics.vector.ImageVector, text: String
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
-            .clip(RoundedCornerShape(8.dp))
-            .background(Navy700)
+            .background(Navy700, RoundedCornerShape(8.dp))
             .padding(horizontal = 10.dp, vertical = 6.dp)
     ) {
         Icon(icon, contentDescription = null, tint = Color.White, modifier = Modifier.size(16.dp))

@@ -187,8 +187,7 @@ private fun TrashTaskCard(
                 // Červený štítek
                 Box(
                     modifier = Modifier
-                        .clip(RoundedCornerShape(8.dp))
-                        .background(ErrorDark.copy(alpha = 0.15f))
+                        .background(ErrorDark.copy(alpha = 0.15f), RoundedCornerShape(8.dp))
                         .border(1.dp, ErrorDark.copy(alpha = 0.4f), RoundedCornerShape(8.dp))
                         .padding(horizontal = 8.dp, vertical = 4.dp)
                 ) {

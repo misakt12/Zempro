@@ -288,7 +288,7 @@ fun CustomerDetail(
                             Spacer(Modifier.height(4.dp))
                             Text(formatTimestamp(task.createdAt), color = Slate400, fontSize = 12.sp)
                         }
-                        Box(modifier = Modifier.clip(RoundedCornerShape(4.dp)).background(if (task.isInvoiceClosed) SuccessLight.copy(alpha=0.2f) else Navy700).padding(6.dp)) {
+                        Box(modifier = Modifier.background(if (task.isInvoiceClosed) SuccessLight.copy(alpha=0.2f) else Navy700, RoundedCornerShape(4.dp)).padding(6.dp)) {
                             Text(if (task.isInvoiceClosed) "Zaplaceno" else "Otevřeno", color = if (task.isInvoiceClosed) SuccessLight else Slate300, fontSize = 10.sp, fontWeight = FontWeight.Bold)
                         }
                     }

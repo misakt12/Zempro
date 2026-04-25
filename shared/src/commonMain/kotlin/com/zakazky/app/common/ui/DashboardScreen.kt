@@ -550,8 +550,7 @@ fun TaskCard(task: Task, onClick: () -> Unit, isAdmin: Boolean) {
             if (!task.isDeleted && task.status == TaskStatus.IN_PROGRESS && assignedMechanicName != null) {
                 Box(
                     modifier = Modifier
-                        .clip(RoundedCornerShape(6.dp))
-                        .background(Blue500.copy(alpha = 0.15f))
+                        .background(Blue500.copy(alpha = 0.15f), RoundedCornerShape(6.dp))
                         .border(1.dp, Blue500.copy(alpha = 0.5f), RoundedCornerShape(6.dp))
                         .padding(horizontal = 8.dp, vertical = 3.dp)
                 ) {
@@ -572,15 +571,14 @@ fun TaskCard(task: Task, onClick: () -> Unit, isAdmin: Boolean) {
                     // Červený štítek "Připraveno k vymazání"
                     Box(
                         modifier = Modifier
-                            .clip(RoundedCornerShape(8.dp))
-                            .background(ErrorDark.copy(alpha = 0.18f))
+                            .background(ErrorDark.copy(alpha = 0.18f), RoundedCornerShape(8.dp))
                             .border(1.dp, ErrorDark.copy(alpha = 0.6f), RoundedCornerShape(8.dp))
                             .padding(horizontal = 8.dp, vertical = 4.dp)
                     ) {
                         Text("🗑️ Připraveno k vymazání", color = ErrorDark, fontSize = 11.sp, fontWeight = FontWeight.Bold)
                     }
                 } else {
-                    Box(modifier = Modifier.clip(RoundedCornerShape(8.dp)).background(statusColor.copy(alpha=0.2f)).border(1.dp, statusColor, RoundedCornerShape(8.dp)).padding(horizontal = 8.dp, vertical = 4.dp)) {
+                    Box(modifier = Modifier.background(statusColor.copy(alpha=0.2f), RoundedCornerShape(8.dp)).border(1.dp, statusColor, RoundedCornerShape(8.dp)).padding(horizontal = 8.dp, vertical = 4.dp)) {
                         Text(task.status.displayName, color = statusColor, fontSize = 12.sp, fontWeight = FontWeight.Bold)
                     }
                 }
