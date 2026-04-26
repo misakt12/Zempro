@@ -15,6 +15,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import io.github.jan.supabase.postgrest.postgrest
+import io.github.jan.supabase.postgrest.query.Columns
 
 @Serializable
 data class AppSnapshot(
@@ -257,17 +258,24 @@ object AppDatabase {
                 try {
                     val oldTasks = tasks.toList()
                     val existingNotifIds = notifications.map { it.id }.toSet()
-                    val bgTasksRaw = SupabaseManager.client.postgrest["tasks"].select().decodeList<Task>()
 
-                    // KLÍČOVÉ: Okamžitě odstraníme binární fotky z původích dat.
-                    // Důvod: fotky mechaniků můžou mít desítky MB. Jejich stahování, parsování
-                    // a dekodóvání base64 každých 30s způsobovalo GPU jitter = pokusování při scrollování!
-                    // Fotky zůstávají uložené lokálně a nepřetečeme je.
-                    val bgTasks = bgTasksRaw.map { it.copy(
-                        taskImages = emptyList(),
-                        localPhotos = emptyList(),
-                        attachedDocuments = emptyList()
-                    )}
+                    // KRIT ICKÉ: Stahujeme ze serveru POUZE skalerní pole bez binárních dat.
+                    // Fotky (taskImages, localPhotos, attachedDocuments) NEJSOU zahrnuty
+                    // v dotazu — server je neposhle vůbec. Tím eliminujeme stahování/parsování
+                    // desítek MB base64 dat každých 30s, což bylo příčinou scroll janku.
+                    val POLL_COLUMNS = Columns.raw(
+                        "id,title,brand,customerName,customerPhone,customerEmail,customerAddress," +
+                        "spz,vin,description,createdBy,assignedTo,status,photoUrls," +
+                        "timeLogs,electricTimeLogs,reworks,vehicleKm,invoiceItems," +
+                        "mechanicWorkPrice,electricWorkPrice,mechanicHourlyRate,electricHourlyRate," +
+                        "isInvoiceClosed,createdAt,updatedAt,readAt,startedAt,completedAt,isDeleted,deletedAt"
+                    )
+                    val bgTasksRaw = SupabaseManager.client.postgrest["tasks"]
+                        .select(POLL_COLUMNS)
+                        .decodeList<Task>()
+
+                    // Foto pole budou prázdné (default hodnoty), není potřeba je odstraňovat
+                    val bgTasks = bgTasksRaw
 
                     // OPRAVA: Pokud cloud vrátí prázdný seznam, ale lokálně máme zakázky,
                     // jde téměř jistě o Supabase cold-start nebo výpadek sítě.

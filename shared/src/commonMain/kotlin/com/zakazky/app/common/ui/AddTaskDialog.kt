@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
@@ -107,7 +108,8 @@ fun AddTaskDialog(
                 modifier = if (isWide)
                     Modifier.fillMaxWidth(0.75f).fillMaxHeight(0.85f)
                 else
-                    Modifier.fillMaxWidth(0.98f).fillMaxHeight(0.98f),
+                    // Na mobilu NEFIXUJEME výšku — dialog se přizpůsobí klávesnici
+                    Modifier.fillMaxWidth(0.98f).fillMaxHeight(0.95f).imePadding(),
                 shape = if (isWide) RoundedCornerShape(24.dp) else RoundedCornerShape(16.dp),
                 color = Navy800
             ) {
