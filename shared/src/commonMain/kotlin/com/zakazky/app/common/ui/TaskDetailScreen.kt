@@ -22,6 +22,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import kotlinx.coroutines.launch
 import com.zakazky.app.common.models.Task
 import com.zakazky.app.common.models.TaskStatus
@@ -121,6 +123,9 @@ fun TaskDetailScreen(
 
     val docViewer = rememberDocumentViewer()
 
+    val focusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
+
     Scaffold(
         topBar = {
             Box(
@@ -130,11 +135,15 @@ fun TaskDetailScreen(
                     .windowInsetsPadding(WindowInsets.statusBars)
             ) {
                 TopAppBar(
-                    title = { 
-                        Text("Detail Zakázky", fontWeight = FontWeight.ExtraBold, fontSize = 20.sp) 
+                    title = {
+                        Text("Detail Zakázky", fontWeight = FontWeight.ExtraBold, fontSize = 20.sp)
                     },
                     navigationIcon = {
-                        IconButton(onClick = onBack) {
+                        IconButton(onClick = {
+                            keyboardController?.hide()
+                            focusManager.clearFocus()
+                            onBack()
+                        }) {
                             Icon(Icons.Default.ArrowBack, contentDescription = "Zpět", tint = Color.White)
                         }
                     },
@@ -165,7 +174,15 @@ fun TaskDetailScreen(
             }
         }
 
-        BoxWithConstraints(modifier = Modifier.fillMaxSize().background(Navy900)) {
+        BoxWithConstraints(modifier = Modifier
+            .fillMaxSize()
+            .background(Navy900)
+            .clickable(indication = null, interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }) {
+                // Kliknutí mimo textové pole zasp skryje klávesnici
+                keyboardController?.hide()
+                focusManager.clearFocus()
+            }
+        ) {
             val isDesktopLayout = maxWidth > 800.dp
             
             val leftColumnContent = @Composable {

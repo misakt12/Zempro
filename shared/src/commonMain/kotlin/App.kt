@@ -35,6 +35,18 @@ import androidx.compose.foundation.Image
 @Composable
 fun App() {
     ZakazkyTheme {
+        // Pozadí sahá až pod status bar (bez bílého pruhu)
+        // Obsah je ale odsunut pod status bar — takže tlačítka jsou klikatelná
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(com.zakazky.app.common.theme.Navy900)
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .statusBarsPadding()
+            ) {
         var isLoggedIn by remember { mutableStateOf(false) }
         var isAdmin by remember { mutableStateOf(true) }
         var selectedTask by remember { mutableStateOf<Task?>(null) }
@@ -43,10 +55,10 @@ fun App() {
 
         if (!isLoggedIn) {
             LoginScreen(
-                onLoginSuccess = { loggedInUser -> 
+                onLoginSuccess = { loggedInUser ->
                     AppDatabase.currentUser = loggedInUser
                     isAdmin = loggedInUser.role == Role.ADMIN
-                    isLoggedIn = true 
+                    isLoggedIn = true
                 }
             )
         } else {
@@ -626,7 +638,8 @@ fun App() {
                     contentView()
                 }
             }
-        }
+        } // close statusBarsPadding Box
+        } // close Navy900 background Box
     }
 }
 

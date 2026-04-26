@@ -16,6 +16,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import io.github.jan.supabase.postgrest.postgrest
 import io.github.jan.supabase.postgrest.query.Columns
+import androidx.compose.runtime.snapshots.Snapshot
 
 @Serializable
 data class AppSnapshot(
@@ -256,8 +257,11 @@ object AppDatabase {
                     continue
                 }
                 try {
-                    val oldTasks = tasks.toList()
-                    val existingNotifIds = notifications.map { it.id }.toSet()
+                    // withoutReadObservation: čtení tasks na pozadí NEZPUSOBUJE rekomposici UI!
+                    // Bez této ochrany každý poll cyklus registroval snapshot reads které
+                    // mohly spídílovat zbytné překreslování celého UI.
+                    val oldTasks = Snapshot.withoutReadObservation { tasks.toList() }
+                    val existingNotifIds = Snapshot.withoutReadObservation { notifications.map { it.id }.toSet() }
 
                     // KRIT ICKÉ: Stahujeme ze serveru POUZE skalerní pole bez binárních dat.
                     // Fotky (taskImages, localPhotos, attachedDocuments) NEJSOU zahrnuty
