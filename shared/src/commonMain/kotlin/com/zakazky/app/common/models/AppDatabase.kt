@@ -119,7 +119,17 @@ object AppDatabase {
                     }
 
                     println("Stahování dat ze Supabase cloudu... (pokus ${attempt + 1})")
-                    val remoteTasks = SupabaseManager.client.postgrest["tasks"].select().decodeList<Task>()
+                    // Stejný POLL_COLUMNS jako při běžném pollingu — BEZ fotek!
+                    // Fotky se nestahují ani při počátečním syncu — eliminuje GC spike který způsobuje jank.
+                    val SYNC_COLUMNS = Columns.raw(
+                        "id,title,brand,customerName,customerPhone,customerEmail,customerAddress," +
+                        "spz,vin,description,createdBy,assignedTo,status,photoUrls," +
+                        "timeLogs,electricTimeLogs,reworks,vehicleKm,invoiceItems," +
+                        "mechanicWorkPrice,electricWorkPrice,mechanicHourlyRate,electricHourlyRate," +
+                        "isInvoiceClosed,createdAt,updatedAt,readAt,startedAt,completedAt,isDeleted,deletedAt"
+                    )
+                    val remoteTasks = SupabaseManager.client.postgrest["tasks"]
+                        .select(SYNC_COLUMNS).decodeList<Task>()
                     val remoteUsers = SupabaseManager.client.postgrest["users"].select().decodeList<User>()
 
                     if (remoteTasks.isNotEmpty() || remoteUsers.isNotEmpty()) {
@@ -199,11 +209,35 @@ object AppDatabase {
                         // withContext(Dispatchers.Main) = Swing EDT dispatch.
                         // Vyžaduje kotlinx-coroutines-swing v desktopApp/build.gradle.kts
                         withContext(Dispatchers.Main) {
-                            tasks.clear()
-                            tasks.addAll(remoteTasks)
-                            users.clear()
-                            users.addAll(remoteUsers)
-                            
+                            // Chirurgická aktualizace — NE clear()+addAll() které způsobuje full recomposition!
+                            remoteTasks.forEach { newTask ->
+                                val idx = tasks.indexOfFirst { it.id == newTask.id }
+                                if (idx == -1) {
+                                    tasks.add(newTask)
+                                } else {
+                                    val old = tasks[idx]
+                                    val changed = old.status != newTask.status ||
+                                        old.assignedTo != newTask.assignedTo ||
+                                        old.isInvoiceClosed != newTask.isInvoiceClosed ||
+                                        old.isDeleted != newTask.isDeleted ||
+                                        old.title != newTask.title
+                                    if (changed) tasks[idx] = newTask.copy(
+                                        localPhotos = old.localPhotos,
+                                        taskImages = old.taskImages,
+                                        attachedDocuments = old.attachedDocuments
+                                    )
+                                }
+                            }
+                            val remoteIds = remoteTasks.map { it.id }.toSet()
+                            tasks.removeAll { it.id !in remoteIds }
+                            if (users.isEmpty()) {
+                                users.addAll(remoteUsers)
+                            } else {
+                                remoteUsers.forEach { u ->
+                                    val ui = users.indexOfFirst { it.id == u.id }
+                                    if (ui == -1) users.add(u) else users[ui] = u
+                                }
+                            }
                             if (newNotifs.isNotEmpty()) {
                                 notifications.addAll(newNotifs)
                                 val hasSound = newNotifs.any { it.shouldPlaySound && it.targetUserId == currentUser.id }

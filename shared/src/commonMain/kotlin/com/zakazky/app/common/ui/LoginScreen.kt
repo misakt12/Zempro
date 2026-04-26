@@ -110,6 +110,7 @@ fun LoginScreen(onLoginSuccess: (User) -> Unit) {
                     listOf(Navy900, Color(0xFF0a0f1e), Navy900)
                 )
             )
+            .statusBarsPadding()
     ) {
         if (selectedUser == null) {
             // ====== VÝBĚR UŽIVATELE ======

@@ -35,18 +35,12 @@ import androidx.compose.foundation.Image
 @Composable
 fun App() {
     ZakazkyTheme {
-        // Pozadí sahá až pod status bar (bez bílého pruhu)
-        // Obsah je ale odsunut pod status bar — takže tlačítka jsou klikatelná
+        // Navy900 pozadí sahá za status bar — bez bílého pruhu nahoře
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(com.zakazky.app.common.theme.Navy900)
         ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .statusBarsPadding()
-            ) {
         var isLoggedIn by remember { mutableStateOf(false) }
         var isAdmin by remember { mutableStateOf(true) }
         var selectedTask by remember { mutableStateOf<Task?>(null) }
@@ -639,7 +633,6 @@ fun App() {
                 }
             } // close BoxWithConstraints
         } // close else (isLoggedIn)
-        } // close statusBarsPadding Box
         } // close Navy900 Box
     } // close ZakazkyTheme
 } // close App()
