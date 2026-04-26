@@ -1,40 +1,70 @@
-Triggered via push 6 minutes ago
-@misakt12misakt12
-pushed
- f83291c
-main
-Status
-Failure
-Total duration
-2m 22s
-Artifacts
-–
+-- Zempro Supabase Setup SQL
+-- Spusťte tento kód v záložce "SQL Editor" -> "New Query" v Supabase a klikněte na "RUN"
 
+CREATE TABLE IF NOT EXISTS public.users (
+    "id" text PRIMARY KEY,
+    "name" text NOT NULL,
+    "email" text NOT NULL,
+    "pin" text NOT NULL,
+    "photoUrl" text,
+    "role" text NOT NULL,
+    "totalHoursLogged" float8 NOT NULL DEFAULT 0.0,
+    "isActive" boolean NOT NULL DEFAULT true,
+    "phone" text NOT NULL DEFAULT ''
+);
 
-build-ios summary
-Gradle Root Project	Requested Tasks	Gradle Version	Build Outcome	Build Scan®
-MyApplication	:shared:embedAndSignAppleFrameworkForXcode	8.2.1	❌	Build Scan not published
-Caching for Gradle actions was enabled - expand for details
-Job summary generated at run-time
-Annotations
-1 error and 9 warnings
-build-ios
-Process completed with exit code 65.
-build-ios
-Node.js 20 actions are deprecated. The following actions are running on Node.js 20 and may not work as expected: actions/checkout@v4, actions/setup-java@v4, gradle/actions/setup-gradle@v3. Actions will be forced to run with Node.js 24 by default starting June 2nd, 2026. Node.js 20 will be removed from the runner on September 16th, 2026. Please check if updated versions of these actions are available that support Node.js 24. To opt into Node.js 24 now, set the FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true environment variable on the runner or in your workflow file. Once Node.js 24 becomes the default, you can temporarily opt out by setting ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
-build-ios
-Failed to save cache entry with path '/Users/runner/.gradle/caches,/Users/runner/.gradle/notifications,/Users/runner/.gradle/.setup-gradle' and key: gradle-home-v1|macOS|build-ios[2572a0850ebd6b5aff92978054b10ba2]-f83291c532ec1484b8435dfa1a70663f2ad03876: Error: <h2>Our services aren't available right now</h2><p>We're working to restore all services as soon as possible. Please check back soon.</p>03o/raQAAAAD99UG9lCw+Toq18qnMMAGmUEhMMzBFREdFMDEwOQBFZGdl
-build-ios
-Failed to save cache entry with path '/Users/runner/.gradle/caches/modules-*/files-*/*/*/*/*' and key: gradle-dependencies-v1-a70c8119f0341a061225742e27872faf: Error: <h2>Our services aren't available right now</h2><p>We're working to restore all services as soon as possible. Please check back soon.</p>03Y/raQAAAADqmJvtDSwQS51xNF98XAlvUEhMMzBFREdFMDIxNgBFZGdl
-build-ios
-Failed to save cache entry with path '/Users/runner/.gradle/caches/jars-*/*/' and key: gradle-instrumented-jars-v1-2229873b23131d6e1674c3318d3c8563: Error: <h2>Our services aren't available right now</h2><p>We're working to restore all services as soon as possible. Please check back soon.</p>03Y/raQAAAABZw99pw/XsQJNoO8hxB9g3UEhMMzBFREdFMDQyMABFZGdl
-build-ios
-Failed to save cache entry with path '/Users/runner/.gradle/caches/*/kotlin-dsl/accessors/*/ /Users/runner/.gradle/caches/*/kotlin-dsl/scripts/*/' and key: gradle-kotlin-dsl-v1-7ead565901a55dbae416938efba4677e: Error: <h2>Our services aren't available right now</h2><p>We're working to restore all services as soon as possible. Please check back soon.</p>03I/raQAAAAB2SqGz6W1QSYTsZ+zLuLeBUEhMMzBFREdFMDQxMgBFZGdl
-build-ios
-Failed to save cache entry with path '/Users/runner/.gradle/caches/8.2.1/generated-gradle-jars/gradle-api-8.2.1.jar' and key: gradle-generated-gradle-jars-v1-fab89ce2c5682e5ef0317ced9690e5a0: Error: <h2>Our services aren't available right now</h2><p>We're working to restore all services as soon as possible. Please check back soon.</p>024/raQAAAABzA4UdhYKhRqSKsl0dDID+UEhMMzBFREdFMDQxMABFZGdl
-build-ios
-Failed to save cache entry with path '/Users/runner/.gradle/wrapper/dists/gradle-8.2.1-bin/5hap6b9n41hkg4jeh2au2pllh' and key: gradle-wrapper-zips-v1-5db698e3747d2d91396a91c446019087: Error: <h2>Our services aren't available right now</h2><p>We're working to restore all services as soon as possible. Please check back soon.</p>024/raQAAAADQHo+GhmZBT6jEFRQPl/5jUEhMMzBFREdFMDIyMABFZGdl
-build-ios
-Failed to save cache entry with path '/Users/runner/.gradle/caches/8.2.1/generated-gradle-jars/gradle-kotlin-dsl-extensions-8.2.1.jar' and key: gradle-generated-gradle-jars-v1-47a7430ddd88985eaeb279fdcd6b6b2f: Error: <h2>Our services aren't available right now</h2><p>We're working to restore all services as soon as possible. Please check back soon.</p>02o/raQAAAAB3Xg+HlxTdSo68viM5AWoIUEhMMzBFREdFMDQyMQBFZGdl
-build-ios
-Failed to restore gradle-home-v1|macOS|build-ios[2572a0850ebd6b5aff92978054b10ba2]-f83291c532ec1484b8435dfa1a70663f2ad03876: Error: Cache service responded with 400
+-- Pozor: Pokud už tabulka existuje, tento skript ji nepřepíše, proto je zde příkaz DROP TABLE, abyste to mohl poslat čistě celé znovu s novými sloupci. 
+-- Zkontrolujte, že v db nemáte ostrá data (pokud ano, úkol dejte radši ALTER TABLE, ať si ty ostrá nesmažete)
+DROP TABLE IF EXISTS public.tasks;
+
+CREATE TABLE public.tasks (
+    "id" text PRIMARY KEY,
+    "title" text NOT NULL,
+    "brand" text NOT NULL,
+    "customerName" text NOT NULL,
+    "customerPhone" text NOT NULL DEFAULT '',
+    "customerEmail" text NOT NULL DEFAULT '',
+    "customerAddress" text NOT NULL DEFAULT '',
+    "spz" text NOT NULL,
+    "vin" text NOT NULL,
+    "description" text NOT NULL,
+    "createdBy" text NOT NULL,
+    "assignedTo" text,
+    "status" text NOT NULL,
+    "photoUrls" jsonb NOT NULL DEFAULT '[]'::jsonb,
+    "taskImages" jsonb NOT NULL DEFAULT '[]'::jsonb,
+    "localPhotos" jsonb NOT NULL DEFAULT '[]'::jsonb,
+    "attachedDocuments" jsonb NOT NULL DEFAULT '[]'::jsonb,
+    "timeLogs" jsonb NOT NULL DEFAULT '[]'::jsonb,
+    "electricTimeLogs" jsonb NOT NULL DEFAULT '[]'::jsonb,
+    "reworks" jsonb NOT NULL DEFAULT '[]'::jsonb,
+    "vehicleKm" int4,
+    "invoiceItems" jsonb NOT NULL DEFAULT '[]'::jsonb,
+    "mechanicWorkPrice" float8 NOT NULL DEFAULT 0.0,
+    "electricWorkPrice" float8 NOT NULL DEFAULT 0.0,
+    "mechanicHourlyRate" float8 NOT NULL DEFAULT 0.0,
+    "electricHourlyRate" float8 NOT NULL DEFAULT 0.0,
+    "isInvoiceClosed" boolean NOT NULL DEFAULT false,
+    "createdAt" int8 NOT NULL DEFAULT 0,
+    "updatedAt" int8 NOT NULL DEFAULT 0,
+    "readAt" int8,
+    "startedAt" int8,
+    "completedAt" int8
+);
+
+-- Vypnutí zabezpečovací propustky po dobu vývoje pro okamžitý přístup
+ALTER TABLE public.users DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.tasks DISABLE ROW LEVEL SECURITY;
+
+-- ======== ZMĚNY: 22.04.2026 ========
+-- Aktualizační balíček pro přidání telefonů, emailu a adresy (DOPORUČENÁ CESTA MÍSTO DROP TABLE)
+ALTER TABLE public.tasks ADD COLUMN IF NOT EXISTS "customerPhone" text NOT NULL DEFAULT '';
+ALTER TABLE public.tasks ADD COLUMN IF NOT EXISTS "customerEmail" text NOT NULL DEFAULT '';
+ALTER TABLE public.tasks ADD COLUMN IF NOT EXISTS "customerAddress" text NOT NULL DEFAULT '';
+
+-- ======== ZMĚNY: 23.04.2026 ========
+-- Přidání sloupce pro datum odeslání zpět šéfovi
+ALTER TABLE public.tasks ADD COLUMN IF NOT EXISTS "completedAt" BIGINT DEFAULT NULL;
+ALTER TABLE public.tasks ADD COLUMN IF NOT EXISTS "isDeleted" boolean NOT NULL DEFAULT false;
+ALTER TABLE public.tasks ADD COLUMN IF NOT EXISTS "deletedAt" BIGINT DEFAULT NULL;
+

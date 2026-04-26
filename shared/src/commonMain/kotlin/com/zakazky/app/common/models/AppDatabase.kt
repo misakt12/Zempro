@@ -15,6 +15,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import io.github.jan.supabase.postgrest.postgrest
+import io.github.jan.supabase.postgrest.query.Columns
 
 @Serializable
 data class AppSnapshot(
@@ -290,14 +291,22 @@ object AppDatabase {
                     val oldTasks = tasks.toList()
                     val existingNotifIds = notifications.map { it.id }.toSet()
 
-                    // Stahujeme všechna data ze serveru, fotky okamžitě zahazujeme z paměti.
-                    // select() je spolehlivejší než Columns.raw() (není závislý na názvech sloupců).
-                    val bgTasksRaw = SupabaseManager.client.postgrest["tasks"].select().decodeList<Task>()
-                    val bgTasks = bgTasksRaw.map { it.copy(
-                        taskImages = emptyList(),
-                        localPhotos = emptyList(),
-                        attachedDocuments = emptyList()
-                    )}
+                    // SQL schéma potvrzené: sloupce jsou camelCase ("taskImages", "localPhotos", atd.)
+                    // Explicitně vynecháváme photo sloupce — server je NEPOSLE vůbec.
+                    // Dříve jsme stahovali vše a házeli fotky pryč v paměti — 
+                    // to stále způsobovalo parsování MB JSON a GC tlak (jank + zahřívání).
+                    val bgTasksRaw = SupabaseManager.client.postgrest["tasks"]
+                        .select(Columns.raw(
+                            "id,title,brand,customerName,customerPhone,customerEmail,customerAddress," +
+                            "spz,vin,description,createdBy,assignedTo,status,photoUrls," +
+                            "timeLogs,electricTimeLogs,reworks,vehicleKm,invoiceItems," +
+                            "mechanicWorkPrice,electricWorkPrice,mechanicHourlyRate,electricHourlyRate," +
+                            "isInvoiceClosed,createdAt,updatedAt,readAt,startedAt,completedAt,isDeleted,deletedAt"
+                        ))
+                        .decodeList<Task>()
+                    // Photo pole (taskImages, localPhotos, attachedDocuments) nejsou v dotazu
+                    // — dostanou výchozí prázdnou hodnotu z datové třídy Task.
+                    val bgTasks = bgTasksRaw
 
                     // OPRAVA: Pokud cloud vrátí prázdný seznam, ale lokálně máme zakázky,
                     // jde téměř jistě o Supabase cold-start nebo výpadek sítě.
