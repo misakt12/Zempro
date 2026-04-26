@@ -637,10 +637,10 @@ fun App() {
                 } else {
                     contentView()
                 }
-            }
+            } // close BoxWithConstraints (else logged in)
         } // close statusBarsPadding Box
-        } // close Navy900 background Box
-    }
-}
+        } // close Navy900 Box
+    } // close ZakazkyTheme
+} // close App()
 
 expect fun getPlatformName(): String

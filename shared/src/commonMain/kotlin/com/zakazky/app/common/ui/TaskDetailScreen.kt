@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.ExperimentalComposeUiApi
 import kotlinx.coroutines.launch
 import com.zakazky.app.common.models.Task
 import com.zakazky.app.common.models.TaskStatus
@@ -41,6 +42,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.ui.layout.ContentScale
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun TaskDetailScreen(
     task: Task,
