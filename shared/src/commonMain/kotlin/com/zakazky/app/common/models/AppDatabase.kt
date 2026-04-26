@@ -118,15 +118,20 @@ object AppDatabase {
                     }
 
                     println("Stahování dat ze Supabase cloudu... (pokus ${attempt + 1})")
-                    // Stahujeme všechna data ze serveru, ale ihned strippujeme binární fotky.
-                    // Důvod: Columns.raw() může selhat na snake_case názvech sloupců, proto
-                    // používáme select() a fotky vyhodime z paměti ihned po stahování.
-                    val remoteTasksRaw = SupabaseManager.client.postgrest["tasks"].select().decodeList<Task>()
-                    val remoteTasks = remoteTasksRaw.map { it.copy(
-                        taskImages = emptyList(),
-                        localPhotos = emptyList(),
-                        attachedDocuments = emptyList()
-                    )}
+                    // KRITICKÉ pro egress: Nestahujeme photo sloupce ani při počátečním syncu!
+                    // Dříve select() stahoval taskImages+localPhotos = MB dat při každém startu.
+                    // Výsledek: 27 GB egress = 554% překročení bezplatného limitu Supabase.
+                    // Fotky jsou ukládány lokálně na zařízení a nepotřebujeme je stahovat zpět.
+                    val SYNC_COLS = Columns.raw(
+                        "id,title,brand,customerName,customerPhone,customerEmail,customerAddress," +
+                        "spz,vin,description,createdBy,assignedTo,status,photoUrls," +
+                        "timeLogs,electricTimeLogs,reworks,vehicleKm,invoiceItems," +
+                        "mechanicWorkPrice,electricWorkPrice,mechanicHourlyRate,electricHourlyRate," +
+                        "isInvoiceClosed,createdAt,updatedAt,readAt,startedAt,completedAt,isDeleted,deletedAt"
+                    )
+                    val remoteTasksRaw = SupabaseManager.client.postgrest["tasks"]
+                        .select(SYNC_COLS).decodeList<Task>()
+                    val remoteTasks = remoteTasksRaw  // foto pole jsou prázdné (default hodnoty)
                     val remoteUsers = SupabaseManager.client.postgrest["users"].select().decodeList<User>()
 
                     if (remoteTasks.isNotEmpty() || remoteUsers.isNotEmpty()) {
