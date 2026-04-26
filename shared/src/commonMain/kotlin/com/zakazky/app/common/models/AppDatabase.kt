@@ -15,8 +15,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import io.github.jan.supabase.postgrest.postgrest
-import io.github.jan.supabase.postgrest.query.Columns
-import androidx.compose.runtime.snapshots.Snapshot
 
 @Serializable
 data class AppSnapshot(
@@ -119,17 +117,15 @@ object AppDatabase {
                     }
 
                     println("Stahování dat ze Supabase cloudu... (pokus ${attempt + 1})")
-                    // Stejný POLL_COLUMNS jako při běžném pollingu — BEZ fotek!
-                    // Fotky se nestahují ani při počátečním syncu — eliminuje GC spike který způsobuje jank.
-                    val SYNC_COLUMNS = Columns.raw(
-                        "id,title,brand,customerName,customerPhone,customerEmail,customerAddress," +
-                        "spz,vin,description,createdBy,assignedTo,status,photoUrls," +
-                        "timeLogs,electricTimeLogs,reworks,vehicleKm,invoiceItems," +
-                        "mechanicWorkPrice,electricWorkPrice,mechanicHourlyRate,electricHourlyRate," +
-                        "isInvoiceClosed,createdAt,updatedAt,readAt,startedAt,completedAt,isDeleted,deletedAt"
-                    )
-                    val remoteTasks = SupabaseManager.client.postgrest["tasks"]
-                        .select(SYNC_COLUMNS).decodeList<Task>()
+                    // Stahujeme všechna data ze serveru, ale ihned strippujeme binární fotky.
+                    // Důvod: Columns.raw() může selhat na snake_case názvech sloupců, proto
+                    // používáme select() a fotky vyhodime z paměti ihned po stahování.
+                    val remoteTasksRaw = SupabaseManager.client.postgrest["tasks"].select().decodeList<Task>()
+                    val remoteTasks = remoteTasksRaw.map { it.copy(
+                        taskImages = emptyList(),
+                        localPhotos = emptyList(),
+                        attachedDocuments = emptyList()
+                    )}
                     val remoteUsers = SupabaseManager.client.postgrest["users"].select().decodeList<User>()
 
                     if (remoteTasks.isNotEmpty() || remoteUsers.isNotEmpty()) {
@@ -291,29 +287,17 @@ object AppDatabase {
                     continue
                 }
                 try {
-                    // withoutReadObservation: čtení tasks na pozadí NEZPUSOBUJE rekomposici UI!
-                    // Bez této ochrany každý poll cyklus registroval snapshot reads které
-                    // mohly spídílovat zbytné překreslování celého UI.
-                    val oldTasks = Snapshot.withoutReadObservation { tasks.toList() }
-                    val existingNotifIds = Snapshot.withoutReadObservation { notifications.map { it.id }.toSet() }
+                    val oldTasks = tasks.toList()
+                    val existingNotifIds = notifications.map { it.id }.toSet()
 
-                    // KRIT ICKÉ: Stahujeme ze serveru POUZE skalerní pole bez binárních dat.
-                    // Fotky (taskImages, localPhotos, attachedDocuments) NEJSOU zahrnuty
-                    // v dotazu — server je neposhle vůbec. Tím eliminujeme stahování/parsování
-                    // desítek MB base64 dat každých 30s, což bylo příčinou scroll janku.
-                    val POLL_COLUMNS = Columns.raw(
-                        "id,title,brand,customerName,customerPhone,customerEmail,customerAddress," +
-                        "spz,vin,description,createdBy,assignedTo,status,photoUrls," +
-                        "timeLogs,electricTimeLogs,reworks,vehicleKm,invoiceItems," +
-                        "mechanicWorkPrice,electricWorkPrice,mechanicHourlyRate,electricHourlyRate," +
-                        "isInvoiceClosed,createdAt,updatedAt,readAt,startedAt,completedAt,isDeleted,deletedAt"
-                    )
-                    val bgTasksRaw = SupabaseManager.client.postgrest["tasks"]
-                        .select(POLL_COLUMNS)
-                        .decodeList<Task>()
-
-                    // Foto pole budou prázdné (default hodnoty), není potřeba je odstraňovat
-                    val bgTasks = bgTasksRaw
+                    // Stahujeme všechna data ze serveru, fotky okamžitě zahazujeme z paměti.
+                    // select() je spolehlivejší než Columns.raw() (není závislý na názvech sloupců).
+                    val bgTasksRaw = SupabaseManager.client.postgrest["tasks"].select().decodeList<Task>()
+                    val bgTasks = bgTasksRaw.map { it.copy(
+                        taskImages = emptyList(),
+                        localPhotos = emptyList(),
+                        attachedDocuments = emptyList()
+                    )}
 
                     // OPRAVA: Pokud cloud vrátí prázdný seznam, ale lokálně máme zakázky,
                     // jde téměř jistě o Supabase cold-start nebo výpadek sítě.
