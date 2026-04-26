@@ -58,7 +58,7 @@ fun App() {
         } else {
             var desktopSelectedTab by remember { mutableStateOf(0) }
             BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
-                val isDesktop = maxWidth > 800.dp
+                val isDesktop = maxWidth > 960.dp  // 960dp = nad iPhone landscape, pod iPad
                 val contentView: @Composable () -> Unit = {
                     if (selectedTask != null) {
             TaskDetailScreen(

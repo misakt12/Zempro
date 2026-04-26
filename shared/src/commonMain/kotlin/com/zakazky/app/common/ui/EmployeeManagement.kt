@@ -61,7 +61,7 @@ fun EmployeeManagement() {
     }
 
     BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
-        val isDesktop = maxWidth > 800.dp
+        val isDesktop = maxWidth > 960.dp  // 960dp = nad iPhone landscape (~932dp), pod iPad
         
         Column(modifier = Modifier.fillMaxSize()) {
             Row(modifier = Modifier.fillMaxWidth().padding(16.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
@@ -215,7 +215,11 @@ fun EmployeeManagement() {
             confirmButton = {
                 TextButton(onClick = {
                     if (newUserName.isNotBlank() && newUserPin.isNotBlank()) {
-                        val base64Str = if (newUserPhotoBytes != null) encodeBase64(newUserPhotoBytes!!) else editingUser?.photoUrl
+                        // Limit velikosti profilové fotky na 600 KB aby nedošlo k OOM crash
+                        val limitedPhoto = newUserPhotoBytes?.let { raw ->
+                            if (raw.size > 600_000) raw.copyOfRange(0, minOf(raw.size, 600_000)) else raw
+                        }
+                        val base64Str = if (limitedPhoto != null) encodeBase64(limitedPhoto) else editingUser?.photoUrl
                         
                         if (editingUser != null) {
                             val index = AppDatabase.users.indexOfFirst { it.id == editingUser!!.id }

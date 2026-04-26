@@ -268,7 +268,7 @@ object AppDatabase {
             // Nekonečná polling smyčka — každých 8s zkontroluje změny
             // Každý cyklus má vlastní try-catch, takže výpadek neukončí celou smyčku
             while (true) {
-                kotlinx.coroutines.delay(30000)  // 30s polling — snížení zátěže CPU/síťě (bylo 10s)
+                kotlinx.coroutines.delay(60000)  // 60s polling — snížení CPU/síťového zatížení
                 
                 // Pokud nám visí neodeslaná data (např. timeout minulý cyklus), nesmíme 
                 // data z cloudu tahat a přepisovat! Musíme to znovu zkusit poslat.
