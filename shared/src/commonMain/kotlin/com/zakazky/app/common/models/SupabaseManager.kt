@@ -3,8 +3,6 @@ package com.zakazky.app.common.models
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.postgrest.postgrest
-import io.github.jan.supabase.realtime.Realtime
-import io.github.jan.supabase.realtime.realtime
 import io.github.jan.supabase.serializer.KotlinXSerializer
 import kotlinx.serialization.json.Json
 
@@ -20,8 +18,11 @@ object SupabaseManager {
             explicitNulls = true
         })
         install(Postgrest)
-        install(Realtime)
-        
+        // Realtime WebSocket odstraněn — způsoboval nepřetržitý scroll jank na iOS.
+        // Realtime automaticky otevírá WebSocket a posílá keepalive každé 2-3s na main threadu.
+        // Používáme vlastní polling (každých 30s) — Realtime nepotřebujeme.
+        // install(Realtime)
+
         httpConfig {
             install(io.ktor.client.plugins.HttpTimeout) {
                 requestTimeoutMillis = 60000L
