@@ -229,7 +229,10 @@ object AppDatabase {
                                         old.assignedTo != newTask.assignedTo ||
                                         old.isInvoiceClosed != newTask.isInvoiceClosed ||
                                         old.isDeleted != newTask.isDeleted ||
-                                        old.title != newTask.title
+                                        old.title != newTask.title ||
+                                        old.photoUrls.size != newTask.photoUrls.size ||
+                                        old.timeLogs.size != newTask.timeLogs.size ||
+                                        old.invoiceItems.size != newTask.invoiceItems.size
                                     if (changed) tasks[idx] = newTask.copy(
                                         localPhotos = old.localPhotos,
                                         taskImages = old.taskImages,
@@ -323,6 +326,7 @@ object AppDatabase {
                         oldTask.isInvoiceClosed != newTask.isInvoiceClosed ||
                         oldTask.invoiceItems.size != newTask.invoiceItems.size ||
                         oldTask.timeLogs.size != newTask.timeLogs.size ||
+                        oldTask.photoUrls.size != newTask.photoUrls.size ||
                         oldTask.isDeleted != newTask.isDeleted
                     }
 
@@ -442,7 +446,8 @@ object AppDatabase {
                                         old.title != newTask.title ||
                                         old.description != newTask.description ||
                                         old.invoiceItems.size != newTask.invoiceItems.size ||
-                                        old.timeLogs.size != newTask.timeLogs.size
+                                        old.timeLogs.size != newTask.timeLogs.size ||
+                                        old.photoUrls.size != newTask.photoUrls.size
                                     if (changed) {
                                         // Při aktualizaci zachováme lokálně uložené fotky!
                                         // Polling je stahuje prázdné, aby neučiněl GC tlak.
@@ -523,6 +528,20 @@ object AppDatabase {
                         httpClient.post("$SERVER_URL/tasks/upsert") {
                             contentType(ContentType.Application.Json)
                             setBody(chunk)
+                        }
+                        // OCHRANA PAMĚTI: Po úspěšném odeslání na server můžeme obří base64 
+                        // fotky smazat z RAM, server už je má bezpečně uložené. 
+                        // Tím zabráníme zasekávání a neustálému chodu Garbage Collectoru!
+                        withContext(Dispatchers.Main) {
+                            chunk.forEach { uploadedTask ->
+                                val idx = tasks.indexOfFirst { it.id == uploadedTask.id }
+                                if (idx != -1) {
+                                    val currentTask = tasks[idx]
+                                    if (currentTask.localPhotos.isNotEmpty() || currentTask.taskImages.isNotEmpty()) {
+                                        tasks[idx] = currentTask.copy(localPhotos = emptyList(), taskImages = emptyList())
+                                    }
+                                }
+                            }
                         }
                     }
                 }
