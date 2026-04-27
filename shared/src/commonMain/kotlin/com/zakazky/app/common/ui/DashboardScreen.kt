@@ -342,7 +342,7 @@ fun DashboardScreen(
                 taskDialogVehicle = null
             },
             onTaskAdded = { title, brand, desc, cust, phone, email, address, spz, vin, empId ->
-                val newId = (AppDatabase.tasks.size + 1).toString()
+                val newId = "task_" + com.zakazky.app.common.utils.getCurrentTimestamp().toString()
                 val now = com.zakazky.app.common.utils.getCurrentTimestamp()
                 AppDatabase.tasks.add(
                     Task(

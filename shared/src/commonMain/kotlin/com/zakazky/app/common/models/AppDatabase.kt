@@ -14,8 +14,15 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import io.github.jan.supabase.postgrest.postgrest
-import io.github.jan.supabase.postgrest.query.Columns
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.request.get
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.serialization.kotlinx.json.json
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
 
 @Serializable
 data class AppSnapshot(
@@ -36,9 +43,17 @@ object AppDatabase {
     private val json = Json { 
         ignoreUnknownKeys = true
         prettyPrint = true
-        encodeDefaults = true // SUPABASE FIX: Povolí zasílání i prázdných/null polí do databáze
+        encodeDefaults = true
         explicitNulls = true
     }
+    
+    val httpClient = HttpClient {
+        install(ContentNegotiation) {
+            json(json)
+        }
+    }
+    val SERVER_URL = "http://194.182.79.72:8080/api"
+    
     private val scope = CoroutineScope(Dispatchers.Default)
     // Pojistka: zabrání spuštění více paralelních sync smyček
     private var syncStarted = false
@@ -63,11 +78,11 @@ object AppDatabase {
                 val snapshot = json.decodeFromString<AppSnapshot>(dataStr)
                 hasPendingUpload = snapshot.pendingUpload
                 users.clear()
-                users.addAll(snapshot.users)
+                users.addAll(snapshot.users.distinctBy { it.id })
                 tasks.clear()
-                tasks.addAll(snapshot.tasks)
+                tasks.addAll(snapshot.tasks.distinctBy { it.id })
                 notifications.clear()
-                notifications.addAll(snapshot.notifications)
+                notifications.addAll(snapshot.notifications.distinctBy { it.id })
                 
                 if (users.isEmpty()) {
                     loadDefaults()
@@ -122,17 +137,9 @@ object AppDatabase {
                     // Dříve select() stahoval taskImages+localPhotos = MB dat při každém startu.
                     // Výsledek: 27 GB egress = 554% překročení bezplatného limitu Supabase.
                     // Fotky jsou ukládány lokálně na zařízení a nepotřebujeme je stahovat zpět.
-                    val SYNC_COLS = Columns.raw(
-                        "id,title,brand,customerName,customerPhone,customerEmail,customerAddress," +
-                        "spz,vin,description,createdBy,assignedTo,status,photoUrls," +
-                        "timeLogs,electricTimeLogs,reworks,vehicleKm,invoiceItems," +
-                        "mechanicWorkPrice,electricWorkPrice,mechanicHourlyRate,electricHourlyRate," +
-                        "isInvoiceClosed,createdAt,updatedAt,readAt,startedAt,completedAt,isDeleted,deletedAt"
-                    )
-                    val remoteTasksRaw = SupabaseManager.client.postgrest["tasks"]
-                        .select(SYNC_COLS).decodeList<Task>()
-                    val remoteTasks = remoteTasksRaw  // foto pole jsou prázdné (default hodnoty)
-                    val remoteUsers = SupabaseManager.client.postgrest["users"].select().decodeList<User>()
+                    // Pro Ktor už nepotřebujeme SYNC_COLS, protože server automaticky filtruje fotky!
+                    val remoteTasks = httpClient.get("$SERVER_URL/tasks").body<List<Task>>()
+                    val remoteUsers = httpClient.get("$SERVER_URL/users").body<List<User>>()
 
                     if (remoteTasks.isNotEmpty() || remoteUsers.isNotEmpty()) {
                         
@@ -296,22 +303,8 @@ object AppDatabase {
                     val oldTasks = tasks.toList()
                     val existingNotifIds = notifications.map { it.id }.toSet()
 
-                    // SQL schéma potvrzené: sloupce jsou camelCase ("taskImages", "localPhotos", atd.)
-                    // Explicitně vynecháváme photo sloupce — server je NEPOSLE vůbec.
-                    // Dříve jsme stahovali vše a házeli fotky pryč v paměti — 
-                    // to stále způsobovalo parsování MB JSON a GC tlak (jank + zahřívání).
-                    val bgTasksRaw = SupabaseManager.client.postgrest["tasks"]
-                        .select(Columns.raw(
-                            "id,title,brand,customerName,customerPhone,customerEmail,customerAddress," +
-                            "spz,vin,description,createdBy,assignedTo,status,photoUrls," +
-                            "timeLogs,electricTimeLogs,reworks,vehicleKm,invoiceItems," +
-                            "mechanicWorkPrice,electricWorkPrice,mechanicHourlyRate,electricHourlyRate," +
-                            "isInvoiceClosed,createdAt,updatedAt,readAt,startedAt,completedAt,isDeleted,deletedAt"
-                        ))
-                        .decodeList<Task>()
-                    // Photo pole (taskImages, localPhotos, attachedDocuments) nejsou v dotazu
-                    // — dostanou výchozí prázdnou hodnotu z datové třídy Task.
-                    val bgTasks = bgTasksRaw
+                    // Odesíláme GET na Ktor
+                    val bgTasks = httpClient.get("$SERVER_URL/tasks").body<List<Task>>()
 
                     // OPRAVA: Pokud cloud vrátí prázdný seznam, ale lokálně máme zakázky,
                     // jde téměř jistě o Supabase cold-start nebo výpadek sítě.
@@ -526,11 +519,19 @@ object AppDatabase {
                 // OutOfMemoryError na telefonech mechaniků, které mají málo RAM.
                 cloudTasks.chunked(1).forEach { chunk ->
                     if (chunk.isNotEmpty()) {
-                        SupabaseManager.client.postgrest["tasks"].upsert(chunk)
+                        httpClient.post("$SERVER_URL/tasks/upsert") {
+                            contentType(ContentType.Application.Json)
+                            setBody(chunk)
+                        }
                     }
                 }
                 
-                if (users.isNotEmpty()) SupabaseManager.client.postgrest["users"].upsert(users.toList())
+                if (users.isNotEmpty()) {
+                    httpClient.post("$SERVER_URL/users/upsert") {
+                        contentType(ContentType.Application.Json)
+                        setBody(users.toList())
+                    }
+                }
                 println("✅ Úspěšně odesláno do cloudu (bez binárních fotek).")
                 hasPendingUpload = false // Úspěch! Uvolníme zámek pro polling.
                 saveLocally() // Uložíme false flag na disk, už není třeba znovu posílat po restartu
@@ -664,10 +665,11 @@ object AppDatabase {
         // Smažeme i ze Supabase — eq musí být uvnitř filter { } bloku
         scope.launch {
             try {
-                SupabaseManager.client.postgrest["tasks"].delete {
-                    filter {
-                        eq("id", taskId)
-                    }
+                // Smazání zatím vyřešíme tak, že úkol updatneme s flagem isDeleted (soft delete), 
+                // Ktor API zatím nemá delete endpoint.
+                httpClient.post("$SERVER_URL/tasks/upsert") {
+                    contentType(ContentType.Application.Json)
+                    setBody(listOf(Task(id = taskId, isDeleted = true)))
                 }
                 println("🗑️ Zakázka '$taskTitle' trvale smazána ze Supabase.")
             } catch (e: Exception) {

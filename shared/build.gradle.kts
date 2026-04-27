@@ -30,11 +30,9 @@ kotlin {
                 @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
                 implementation(compose.components.resources)
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
-                // Supabase and Ktor
-                implementation("io.github.jan-tennert.supabase:postgrest-kt:2.1.3")
-                // realtime-kt ODSTRANĚNO — i bez install(Realtime) způsobovala knihovna
-                // WebSocket inicializaci při startu Ktor klienta → iOS main thread jank + zahřívání
                 implementation("io.ktor:ktor-client-core:2.3.9")
+                implementation("io.ktor:ktor-client-content-negotiation:2.3.9")
+                implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.9")
             }
         }
         val androidMain by getting {

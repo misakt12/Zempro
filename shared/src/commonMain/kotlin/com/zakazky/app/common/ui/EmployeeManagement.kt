@@ -131,11 +131,11 @@ fun EmployeeManagement() {
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     item { Text("Aktuální zaměstnanci", color = Blue200, fontWeight = FontWeight.Bold) }
-                    items(activeUsers, key = { it.id }) { user -> EmployeeCard(user, { onEditUser(user) }, { onToggleStatus(user) }) }
+                    items(activeUsers, key = { "${it.id}_${it.hashCode()}" }) { user -> EmployeeCard(user, { onEditUser(user) }, { onToggleStatus(user) }) }
                     if (historyUsers.isNotEmpty()) {
                         item { Spacer(Modifier.height(8.dp)) }
                         item { Text("Historie", color = Slate400, fontWeight = FontWeight.Bold) }
-                        items(historyUsers, key = { it.id }) { user -> EmployeeCard(user, { onEditUser(user) }, { onToggleStatus(user) }) }
+                        items(historyUsers, key = { "${it.id}_${it.hashCode()}" }) { user -> EmployeeCard(user, { onEditUser(user) }, { onToggleStatus(user) }) }
                     }
                 }
             }
