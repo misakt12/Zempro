@@ -11,6 +11,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -179,17 +181,18 @@ fun TaskDetailScreen(
         BoxWithConstraints(modifier = Modifier
             .fillMaxSize()
             .background(Navy900)
-            .clickable(indication = null, interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }) {
-                // Kliknutí mimo textové pole zasp skryje klávesnici
-                keyboardController?.hide()
-                focusManager.clearFocus()
+            .pointerInput(Unit) {
+                detectTapGestures(onTap = {
+                    keyboardController?.hide()
+                    focusManager.clearFocus()
+                })
             }
         ) {
             val isDesktopLayout = maxWidth > 800.dp
             
             val leftColumnContent = @Composable {
                 Column(
-                    modifier = Modifier.fillMaxWidth().padding(paddingValues).navigationBarsPadding().imePadding()
+                    modifier = Modifier.fillMaxWidth().padding(paddingValues).navigationBarsPadding()
                 ) {
             // Task Header Info
             Surface(
@@ -390,7 +393,7 @@ fun TaskDetailScreen(
                 
             val rightColumnContent = @Composable {
                 Column(
-                    modifier = Modifier.fillMaxWidth().padding(paddingValues).navigationBarsPadding().imePadding()
+                    modifier = Modifier.fillMaxWidth().padding(paddingValues).navigationBarsPadding()
                 ) {
                     if (task.timeLogs.isNotEmpty() || task.electricTimeLogs.isNotEmpty()) {
                         Spacer(modifier = Modifier.height(24.dp))
@@ -1116,18 +1119,14 @@ fun TaskDetailScreen(
 
             // Universal bottom spacer
             Spacer(modifier = Modifier.height(40.dp))
-            
-            // Diagnostický text
-            Row(modifier = Modifier.fillMaxWidth().padding(bottom = 40.dp), horizontalArrangement = Arrangement.Center) {
-                Text("--- Konec stránky (Verze 2) ---", fontSize = 12.sp, color = Slate400)
-            }
             }
             } // close rightColumnContent
             if (isDesktopLayout) {
                 Row(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(horizontal = 24.dp),
+                        .padding(horizontal = 24.dp)
+                        .imePadding(),
                     horizontalArrangement = Arrangement.spacedBy(24.dp)
                 ) {
                     Column(
@@ -1151,6 +1150,7 @@ fun TaskDetailScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
+                        .imePadding()
                         .verticalScroll(rememberScrollState())
                 ) {
                     leftColumnContent()
@@ -1189,6 +1189,7 @@ fun TaskDetailScreen(
     if (showAddItemDialog) {
         AlertDialog(
             onDismissRequest = { showAddItemDialog = false },
+            modifier = Modifier.imePadding(),
             backgroundColor = Navy800,
             contentColor = Color.White,
             title = { Text("Přidat Materiál", fontWeight = FontWeight.Bold, color = Color.White) },
@@ -1239,6 +1240,7 @@ fun TaskDetailScreen(
     if (itemToEdit != null) {
         AlertDialog(
             onDismissRequest = { itemToEdit = null },
+            modifier = Modifier.imePadding(),
             backgroundColor = Navy800,
             contentColor = Color.White,
             title = { Text("Upravit položku", fontWeight = FontWeight.Bold, color = Color.White) },
