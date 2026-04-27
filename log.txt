@@ -1,70 +1,178 @@
--- Zempro Supabase Setup SQL
--- Spusťte tento kód v záložce "SQL Editor" -> "New Query" v Supabase a klikněte na "RUN"
-
-CREATE TABLE IF NOT EXISTS public.users (
-    "id" text PRIMARY KEY,
-    "name" text NOT NULL,
-    "email" text NOT NULL,
-    "pin" text NOT NULL,
-    "photoUrl" text,
-    "role" text NOT NULL,
-    "totalHoursLogged" float8 NOT NULL DEFAULT 0.0,
-    "isActive" boolean NOT NULL DEFAULT true,
-    "phone" text NOT NULL DEFAULT ''
-);
-
--- Pozor: Pokud už tabulka existuje, tento skript ji nepřepíše, proto je zde příkaz DROP TABLE, abyste to mohl poslat čistě celé znovu s novými sloupci. 
--- Zkontrolujte, že v db nemáte ostrá data (pokud ano, úkol dejte radši ALTER TABLE, ať si ty ostrá nesmažete)
-DROP TABLE IF EXISTS public.tasks;
-
-CREATE TABLE public.tasks (
-    "id" text PRIMARY KEY,
-    "title" text NOT NULL,
-    "brand" text NOT NULL,
-    "customerName" text NOT NULL,
-    "customerPhone" text NOT NULL DEFAULT '',
-    "customerEmail" text NOT NULL DEFAULT '',
-    "customerAddress" text NOT NULL DEFAULT '',
-    "spz" text NOT NULL,
-    "vin" text NOT NULL,
-    "description" text NOT NULL,
-    "createdBy" text NOT NULL,
-    "assignedTo" text,
-    "status" text NOT NULL,
-    "photoUrls" jsonb NOT NULL DEFAULT '[]'::jsonb,
-    "taskImages" jsonb NOT NULL DEFAULT '[]'::jsonb,
-    "localPhotos" jsonb NOT NULL DEFAULT '[]'::jsonb,
-    "attachedDocuments" jsonb NOT NULL DEFAULT '[]'::jsonb,
-    "timeLogs" jsonb NOT NULL DEFAULT '[]'::jsonb,
-    "electricTimeLogs" jsonb NOT NULL DEFAULT '[]'::jsonb,
-    "reworks" jsonb NOT NULL DEFAULT '[]'::jsonb,
-    "vehicleKm" int4,
-    "invoiceItems" jsonb NOT NULL DEFAULT '[]'::jsonb,
-    "mechanicWorkPrice" float8 NOT NULL DEFAULT 0.0,
-    "electricWorkPrice" float8 NOT NULL DEFAULT 0.0,
-    "mechanicHourlyRate" float8 NOT NULL DEFAULT 0.0,
-    "electricHourlyRate" float8 NOT NULL DEFAULT 0.0,
-    "isInvoiceClosed" boolean NOT NULL DEFAULT false,
-    "createdAt" int8 NOT NULL DEFAULT 0,
-    "updatedAt" int8 NOT NULL DEFAULT 0,
-    "readAt" int8,
-    "startedAt" int8,
-    "completedAt" int8
-);
-
--- Vypnutí zabezpečovací propustky po dobu vývoje pro okamžitý přístup
-ALTER TABLE public.users DISABLE ROW LEVEL SECURITY;
-ALTER TABLE public.tasks DISABLE ROW LEVEL SECURITY;
-
--- ======== ZMĚNY: 22.04.2026 ========
--- Aktualizační balíček pro přidání telefonů, emailu a adresy (DOPORUČENÁ CESTA MÍSTO DROP TABLE)
-ALTER TABLE public.tasks ADD COLUMN IF NOT EXISTS "customerPhone" text NOT NULL DEFAULT '';
-ALTER TABLE public.tasks ADD COLUMN IF NOT EXISTS "customerEmail" text NOT NULL DEFAULT '';
-ALTER TABLE public.tasks ADD COLUMN IF NOT EXISTS "customerAddress" text NOT NULL DEFAULT '';
-
--- ======== ZMĚNY: 23.04.2026 ========
--- Přidání sloupce pro datum odeslání zpět šéfovi
-ALTER TABLE public.tasks ADD COLUMN IF NOT EXISTS "completedAt" BIGINT DEFAULT NULL;
-ALTER TABLE public.tasks ADD COLUMN IF NOT EXISTS "isDeleted" boolean NOT NULL DEFAULT false;
-ALTER TABLE public.tasks ADD COLUMN IF NOT EXISTS "deletedAt" BIGINT DEFAULT NULL;
-
+2026-04-27 12:16:06.545 29303-29303 Kumiho-Kumiho           com.zakazky.app                      I  getPackageName: com.zakazky.app
+2026-04-27 12:16:06.643 29303-29309 com.zakazky.app         com.zakazky.app                      I  Compiler allocated 5066KB to compile void android.view.ViewRootImpl.performTraversals()
+2026-04-27 12:16:06.653 29303-29303 Kumiho-Kumiho           com.zakazky.app                      I  getPackageName: com.zakazky.app
+2026-04-27 12:16:06.681 29303-29303 Kumiho-Kumiho           com.zakazky.app                      I  getPackageName: com.zakazky.app
+2026-04-27 12:16:06.705 29303-29303 Kumiho-Kumiho           com.zakazky.app                      I  getPackageName: com.zakazky.app
+2026-04-27 12:16:06.707 29303-29303 Kumiho-Kumiho           com.zakazky.app                      I  getPackageName: com.zakazky.app
+2026-04-27 12:16:06.719 29303-29303 Kumiho-Kumiho           com.zakazky.app                      I  getPackageName: com.zakazky.app
+2026-04-27 12:16:06.721 29303-29303 Kumiho-Kumiho           com.zakazky.app                      I  getPackageName: com.zakazky.app
+2026-04-27 12:16:06.732 29303-29303 Kumiho-Kumiho           com.zakazky.app                      I  getPackageName: com.zakazky.app
+2026-04-27 12:16:06.758 29303-29303 Kumiho-Kumiho           com.zakazky.app                      I  getPackageName: com.zakazky.app
+2026-04-27 12:16:06.770 29303-29303 com.zakazky.app         com.zakazky.app                      E  Unable to open libpenguin.so: dlopen failed: library "libpenguin.so" not found.
+2026-04-27 12:16:06.770 29303-29303 libc                    com.zakazky.app                      W  Access denied finding property "vendor.display.enable_optimal_refresh_rate"
+2026-04-27 12:16:06.770 29303-29303 BufferQueueProducer     com.zakazky.app                      I  [](id:727700000000,api:0,p:-166809712,c:29303) setDequeueTimeout:2077252342
+2026-04-27 12:16:06.770 29303-29303 BLASTBufferQueue_Java   com.zakazky.app                      I  new BLASTBufferQueue, mName= VRI[MainActivity]@640abf3 mNativeObject= 0xb4000072560f42a0 caller= android.view.ViewRootImpl.updateBlastSurfaceIfNeeded:3585 android.view.ViewRootImpl.relayoutWindow:11685 android.view.ViewRootImpl.performTraversals:4804 android.view.ViewRootImpl.doTraversal:3924 android.view.ViewRootImpl$TraversalRunnable.run:12903 android.view.Choreographer$CallbackRecord.run:1901 android.view.Choreographer$CallbackRecord.run:1910 android.view.Choreographer.doCallbacks:1367 android.view.Choreographer.doFrame:1292 android.view.Choreographer$FrameDisplayEventReceiver.run:1870 
+2026-04-27 12:16:06.770 29303-29303 BLASTBufferQueue_Java   com.zakazky.app                      I  update, w= 1080 h= 2340 mName = VRI[MainActivity]@640abf3 mNativeObject= 0xb4000072560f42a0 sc.mNativeObject= 0xb4000072860cab90 format= -1 caller= android.view.ViewRootImpl.updateBlastSurfaceIfNeeded:3590 android.view.ViewRootImpl.relayoutWindow:11685 android.view.ViewRootImpl.performTraversals:4804 android.view.ViewRootImpl.doTraversal:3924 android.view.ViewRootImpl$TraversalRunnable.run:12903 android.view.Choreographer$CallbackRecord.run:1901 
+2026-04-27 12:16:06.770 29303-29303 libc                    com.zakazky.app                      W  Access denied finding property "vendor.display.enable_optimal_refresh_rate"
+2026-04-27 12:16:06.771 29303-29303 VRI[MainAc...y]@640abf3 com.zakazky.app                      I  Relayout returned: old=(0,0,1080,2340) new=(0,0,1080,2340) relayoutAsync=false req=(1080,2340)0 dur=4 res=0x3 s={true 0xb4000071d60f4d00} ch=true seqId=0
+2026-04-27 12:16:06.771 29303-29303 VRI[MainAc...y]@640abf3 com.zakazky.app                      I  performConfigurationChange setNightDimText nightDimLevel=0
+2026-04-27 12:16:06.771 29303-29303 VRI[MainAc...y]@640abf3 com.zakazky.app                      D  mThreadedRenderer.initialize() mSurface={isValid=true 0xb4000071d60f4d00} hwInitialized=true
+2026-04-27 12:16:06.780 29303-29303 VRI[MainAc...y]@640abf3 com.zakazky.app                      D  reportNextDraw android.view.ViewRootImpl.performTraversals:5443 android.view.ViewRootImpl.doTraversal:3924 android.view.ViewRootImpl$TraversalRunnable.run:12903 android.view.Choreographer$CallbackRecord.run:1901 android.view.Choreographer$CallbackRecord.run:1910 
+2026-04-27 12:16:06.780 29303-29303 VRI[MainAc...y]@640abf3 com.zakazky.app                      D  Setup new sync=wmsSync-VRI[MainActivity]@640abf3#0
+2026-04-27 12:16:06.780 29303-29303 VRI[MainAc...y]@640abf3 com.zakazky.app                      I  Creating new active sync group VRI[MainActivity]@640abf3#1
+2026-04-27 12:16:06.781 29303-29303 VRI[MainAc...y]@640abf3 com.zakazky.app                      D  registerCallbacksForSync syncBuffer=false
+2026-04-27 12:16:06.793 29303-29347 VRI[MainAc...y]@640abf3 com.zakazky.app                      D  Received frameDrawingCallback syncResult=0 frameNum=1.
+2026-04-27 12:16:06.793 29303-29347 VRI[MainAc...y]@640abf3 com.zakazky.app                      I  mWNT: t=0xb4000073260f3390 mBlastBufferQueue=0xb4000072560f42a0 fn= 1 HdrRenderState mRenderHdrSdrRatio=1.0 caller= android.view.ViewRootImpl$12.onFrameDraw:15441 android.view.ThreadedRenderer$1.onFrameDraw:718 <bottom of call stack> 
+2026-04-27 12:16:06.793 29303-29347 VRI[MainAc...y]@640abf3 com.zakazky.app                      I  Setting up sync and frameCommitCallback
+2026-04-27 12:16:06.794 29303-29330 AdrenoUtils             com.zakazky.app                      I  <ReadGpuID:357>: Reading chip ID through GSL
+2026-04-27 12:16:06.795 29303-29330 qdgralloc               com.zakazky.app                      W  getInterlacedFlag: getMetaData returned 3, defaulting to interlaced_flag = 0
+2026-04-27 12:16:06.821 29303-29330 BLASTBufferQueue        com.zakazky.app                      I  [VRI[MainActivity]@640abf3#0](f:0,a:0,s:0) onFrameAvailable the first frame is available
+2026-04-27 12:16:06.821 29303-29330 SurfaceComposerClient   com.zakazky.app                      I  apply transaction with the first frame. layerId: 38689, bufferData(ID: 125855426674691, frameNumber: 1)
+2026-04-27 12:16:06.821 29303-29330 VRI[MainAc...y]@640abf3 com.zakazky.app                      I  Received frameCommittedCallback lastAttemptedDrawFrameNum=1 didProduceBuffer=true
+2026-04-27 12:16:06.822 29303-29330 HWUI                    com.zakazky.app                      D  CFMS:: SetUp Pid : 29303    Tid : 29330
+2026-04-27 12:16:06.822 29303-29303 VRI[MainAc...y]@640abf3 com.zakazky.app                      D  reportDrawFinished seqId=0
+2026-04-27 12:16:06.822 29303-29303 Choreographer           com.zakazky.app                      I  Skipped 39 frames!  The application may be doing too much work on its main thread.
+2026-04-27 12:16:06.850 29303-29330 qdgralloc               com.zakazky.app                      W  getInterlacedFlag: getMetaData returned 3, defaulting to interlaced_flag = 0
+2026-04-27 12:16:06.856 29303-29303 InsetsSourceConsumer    com.zakazky.app                      I  applyRequestedVisibilityToControl: visible=true, type=navigationBars, host=com.zakazky.app/com.zakazky.app.MainActivity
+2026-04-27 12:16:06.856 29303-29303 InsetsSourceConsumer    com.zakazky.app                      I  applyRequestedVisibilityToControl: visible=true, type=statusBars, host=com.zakazky.app/com.zakazky.app.MainActivity
+2026-04-27 12:16:06.875 29303-29330 qdgralloc               com.zakazky.app                      W  getInterlacedFlag: getMetaData returned 3, defaulting to interlaced_flag = 0
+2026-04-27 12:16:06.875 29303-29303 VRI[MainAc...y]@640abf3 com.zakazky.app                      D  mThreadedRenderer.initializeIfNeeded()#2 mSurface={isValid=true 0xb4000071d60f4d00}
+2026-04-27 12:16:06.875 29303-29303 InputMethodManagerUtils com.zakazky.app                      D  startInputInner - Id : 0
+2026-04-27 12:16:06.875 29303-29303 InputMethodManager      com.zakazky.app                      I  startInputInner - IInputMethodManagerGlobalInvoker.startInputOrWindowGainedFocus
+2026-04-27 12:16:06.882 29303-29315 InputTransport          com.zakazky.app                      D  Input channel constructed: 'ClientS', fd=143
+2026-04-27 12:16:06.894 29303-29330 qdgralloc               com.zakazky.app                      W  getInterlacedFlag: getMetaData returned 3, defaulting to interlaced_flag = 0
+2026-04-27 12:16:06.895 29303-29303 InputMethodManager      com.zakazky.app                      I  handleMessage: setImeVisibility visible=false
+2026-04-27 12:16:06.895 29303-29303 InsetsController        com.zakazky.app                      D  hide(ime(), fromIme=false)
+2026-04-27 12:16:06.895 29303-29303 ImeTracker              com.zakazky.app                      I  com.zakazky.app:cd9e9a98: onCancelled at PHASE_CLIENT_ALREADY_HIDDEN
+2026-04-27 12:16:07.365 29303-29310 com.zakazky.app         com.zakazky.app                      W  userfaultfd: MOVE ioctl seems unsupported: Try again
+2026-04-27 12:16:11.411 29303-29388 ProfileInstaller        com.zakazky.app                      D  Installing profile for com.zakazky.app
+2026-04-27 12:16:11.487 29303-29333 System.out              com.zakazky.app                      I  Stahování dat ze Supabase cloudu... (pokus 2)
+2026-04-27 12:16:11.492 29303-29333 System.out              com.zakazky.app                      I  Pokus 2 selhal: CLEARTEXT communication to 194.182.79.72 not permitted by network security policy. Zkouším znovu za 5s...
+2026-04-27 12:16:15.121 29303-29303 VRI[MainAc...y]@640abf3 com.zakazky.app                      I  ViewPostIme pointer 0
+2026-04-27 12:16:15.128 29303-29303 VRI[MainAc...y]@640abf3 com.zakazky.app                      I  call setFrameRateCategory for touch hint category=high hint, reason=touch, vri=VRI[MainActivity]@640abf3
+2026-04-27 12:16:15.162 29303-29303 Kumiho-Kumiho           com.zakazky.app                      I  getPackageName: com.zakazky.app
+2026-04-27 12:16:15.169 29303-29303 Kumiho-Kumiho           com.zakazky.app                      I  getPackageName: com.zakazky.app
+2026-04-27 12:16:15.241 29303-29303 VRI[MainAc...y]@640abf3 com.zakazky.app                      I  ViewPostIme pointer 1
+2026-04-27 12:16:16.403 29303-29303 VRI[MainAc...y]@640abf3 com.zakazky.app                      I  ViewPostIme pointer 0
+2026-04-27 12:16:16.474 29303-29303 Kumiho-Kumiho           com.zakazky.app                      I  getPackageName: com.zakazky.app
+2026-04-27 12:16:16.493 29303-29333 System.out              com.zakazky.app                      I  Stahování dat ze Supabase cloudu... (pokus 3)
+2026-04-27 12:16:16.500 29303-29303 Kumiho-Kumiho           com.zakazky.app                      I  getPackageName: com.zakazky.app
+2026-04-27 12:16:16.501 29303-29389 System.out              com.zakazky.app                      I  Pokus 3 selhal: CLEARTEXT communication to 194.182.79.72 not permitted by network security policy. Zkouším znovu za 5s...
+2026-04-27 12:16:16.901 29303-29303 VRI[MainAc...y]@640abf3 com.zakazky.app                      I  ViewPostIme pointer 1
+2026-04-27 12:16:17.309 29303-29303 VRI[MainAc...y]@640abf3 com.zakazky.app                      I  ViewPostIme pointer 0
+2026-04-27 12:16:17.360 29303-29303 VRI[MainAc...y]@640abf3 com.zakazky.app                      I  ViewPostIme pointer 1
+2026-04-27 12:16:17.373 29303-29303 Kumiho-Kumiho           com.zakazky.app                      I  getPackageName: com.zakazky.app
+2026-04-27 12:16:17.375 29303-29303 Kumiho-Kumiho           com.zakazky.app                      I  getPackageName: com.zakazky.app
+2026-04-27 12:16:17.405 29303-29303 CompatChangeReporter    com.zakazky.app                      D  Compat change id reported: 289878283; UID 11101; state: ENABLED
+2026-04-27 12:16:18.152 29303-29303 VRI[MainAc...y]@640abf3 com.zakazky.app                      I  ViewPostIme pointer 0
+2026-04-27 12:16:18.215 29303-29303 VRI[MainAc...y]@640abf3 com.zakazky.app                      I  ViewPostIme pointer 1
+2026-04-27 12:16:18.222 29303-29303 Compose Focus           com.zakazky.app                      D  Owner FocusChanged(true)
+2026-04-27 12:16:18.239 29303-29303 InputMethodManagerUtils com.zakazky.app                      D  startInputInner - Id : 0
+2026-04-27 12:16:18.239 29303-29303 InputMethodManager      com.zakazky.app                      I  startInputInner - IInputMethodManagerGlobalInvoker.startInputOrWindowGainedFocus
+2026-04-27 12:16:18.240 29303-29303 InputMethodManagerUtils com.zakazky.app                      D  startInputInner - Id : 0
+2026-04-27 12:16:18.240 29303-29303 InputMethodManager      com.zakazky.app                      I  startInputInner - IInputMethodManagerGlobalInvoker.startInputOrWindowGainedFocus
+2026-04-27 12:16:18.240 29303-29303 InsetsController        com.zakazky.app                      D  show(ime(), fromIme=false)
+2026-04-27 12:16:18.241 29303-29303 ImeTracker              com.zakazky.app                      I  com.zakazky.app:ae961579: onRequestShow at ORIGIN_CLIENT reason SHOW_SOFT_INPUT_BY_INSETS_API fromUser false
+2026-04-27 12:16:18.242 29303-29303 InsetsController        com.zakazky.app                      D  Setting requestedVisibleTypes to -1 (was -9)
+2026-04-27 12:16:18.242 29303-29303 InsetsController        com.zakazky.app                      I  setRequestedVisibleTypes: visible=true, mask=ime, host=com.zakazky.app/com.zakazky.app.MainActivity, from=android.view.InsetsController.controlAnimationUnchecked:1604 android.view.InsetsController.applyAnimation:2416 android.view.InsetsController.applyAnimation:2343 android.view.InsetsController.show:1422 android.view.InsetsController.show:1335 androidx.compose.ui.platform.coreshims.SoftwareKeyboardControllerCompat$Impl30.show:193 androidx.compose.ui.platform.coreshims.SoftwareKeyboardControllerCompat.show:71 androidx.compose.ui.text.input.InputMethodManagerImpl.showSoftInput:68 androidx.compose.ui.text.input.TextInputServiceAndroid.setKeyboardVisibleImmediately:403 androidx.compose.ui.text.input.TextInputServiceAndroid.processInputCommands:310 
+2026-04-27 12:16:18.245 29303-29381 InputTransport          com.zakazky.app                      D  Input channel constructed: 'ClientS', fd=158
+2026-04-27 12:16:18.245 29303-29381 InputTransport          com.zakazky.app                      D  Input channel constructed: 'ClientS', fd=167
+2026-04-27 12:16:18.256 29303-29303 VRI[MainAc...y]@640abf3 com.zakazky.app                      I  handleResized, frames=ClientWindowFrames{frame=[0,0][1080,2340] display=[0,0][1080,2340] parentFrame=[0,0][0,0]} displayId=0 dragResizing=false compatScale=1.0 frameChanged=false attachedFrameChanged=false configChanged=false displayChanged=false compatScaleChanged=false dragResizingChanged=false
+2026-04-27 12:16:18.268 29303-29303 RemoteInpu...ectionImpl com.zakazky.app                      W  getExtractedText on inactive InputConnection
+2026-04-27 12:16:18.332 29303-29303 RecordingIC             com.zakazky.app                      W  requestCursorUpdates is not supported
+2026-04-27 12:16:18.359 29303-29303 RemoteInpu...ectionImpl com.zakazky.app                      W  requestCursorUpdates on inactive InputConnection
+2026-04-27 12:16:18.365 29303-29303 RecordingIC             com.zakazky.app                      W  requestCursorUpdates is not supported
+2026-04-27 12:16:18.421 29303-29303 InsetsController        com.zakazky.app                      I  onStateChanged: host=com.zakazky.app/com.zakazky.app.MainActivity, from=android.view.ViewRootImpl.onInsetsStateChanged:3026, state=InsetsState: {mDisplayFrame=Rect(0, 0 - 1080, 2340), mDisplayCutout=DisplayCutout{insets=Rect(0, 84 - 0, 0) waterfall=Insets{left=0, top=0, right=0, bottom=0} boundingRect={Bounds=[Rect(0, 0 - 0, 0), Rect(515, 0 - 566, 84), Rect(0, 0 - 0, 0), Rect(0, 0 - 0, 0)]} cutoutPathParserInfo={CutoutPathParserInfo{displayWidth=1080 displayHeight=2340 physicalDisplayWidth=1080 physicalDisplayHeight=2340 density={2.8125} cutoutSpec={M 0,0 H -9.066666666666667 V 29.86666666666667 H 9.066666666666667 V 0 H 0 Z @dp} rotation={0} scale={1.0} physicalPixelDisplaySizeRatio={1.0}}} sideOverrides={}}, mRoundedCorners=RoundedCorners{[RoundedCorner{position=TopLeft, radius=6, center=Point(6, 6)}, RoundedCorner{position=TopRight, radius=6, center=Point(1074, 6)}, RoundedCorner{position=BottomRight, radius=6, center=Point(1074, 2334)}, RoundedCorner{position=BottomLeft, radius=6, center=Point(6, 2334)}]}  mRoundedCornerFrame=Rect(0, 0 - 1080, 2340), mPrivacyIndicatorBounds=PrivacyIndicatorBounds {static bounds=Rect(956, 0 - 1080, 84) rotation=0}, mDisplayShape=DisplayShape{ spec=1406003047 displayWidth=1080 displayHeight=2340 physicalPixelDisplaySizeRatio=0.75 rotation=0 offsetX=0 offsetY=0 scale=1.0}, mSources= { InsetsSource: {9b990000 mType=statusBars mFrame=[0,0][1080,84] mVisible=true mFlags= mSideHint=TOP mBoundingRects=null}, InsetsSource: {9b990005 mType=mandatorySystemGestures mFrame=[0,0][1080,118] mVisible=true mFlags= mSideHint=TOP mBoundingRects=null}, InsetsSource: {9b990006 mType=tappableElement mFrame=[0,0][1080,84] mVisible=true mFlags= mSideHint=TOP mBoundingRects=null}, InsetsSource: {3 mType=ime mFrame=[0,1332][1080,2340] mVisible=true mFlags= mSideHint=BOTTOM mBoundingRects=null}, InsetsSource: {27 mType=displayCutout mFrame=[0,0][1080,84] mVisible=true mFlags= mSideHint=TOP mBoundingRects=null}, InsetsSource: {2ea20001 mType=navigationBars mFrame=[0,2205][1080,2340] mVisible=true mFlags= mSideHint=BOTTOM mBoundingRects=null}, InsetsSource: {2ea20004 mType=systemGestures mFrame=[0,0][0,0] mVisible=true mFlags= mSideHint=NONE mBoundingRects=null}, InsetsSource: {2ea20005 mType=mandatorySystemGestures mFrame=[0,2205][1080,2340] mVisible=true mFlags= mSideHint=BOTTOM mBoundingRects=null}, InsetsSource: {2ea20006 mType=tappableElement mFrame=[0,2205][1080,2340] mVisible=true mFlags= mSideHint=BOTTOM mBoundingRects=null}, InsetsSource: {2ea20024 mType=systemGestures mFrame=[0,0][0,0] mVisible=true mFlags= mSideHint=NONE mBoundingRects=null} }
+2026-04-27 12:16:18.421 29303-29303 VRI[MainAc...y]@640abf3 com.zakazky.app                      I  handleResized, frames=ClientWindowFrames{frame=[0,0][1080,2340] display=[0,0][1080,2340] parentFrame=[0,0][0,0]} displayId=0 dragResizing=false compatScale=1.0 frameChanged=false attachedFrameChanged=false configChanged=false displayChanged=false compatScaleChanged=false dragResizingChanged=false
+2026-04-27 12:16:18.430 29303-29303 InsetsController        com.zakazky.app                      I  onStateChanged: host=com.zakazky.app/com.zakazky.app.MainActivity, from=android.view.ViewRootImpl.onInsetsStateChanged:3026, state=InsetsState: {mDisplayFrame=Rect(0, 0 - 1080, 2340), mDisplayCutout=DisplayCutout{insets=Rect(0, 84 - 0, 0) waterfall=Insets{left=0, top=0, right=0, bottom=0} boundingRect={Bounds=[Rect(0, 0 - 0, 0), Rect(515, 0 - 566, 84), Rect(0, 0 - 0, 0), Rect(0, 0 - 0, 0)]} cutoutPathParserInfo={CutoutPathParserInfo{displayWidth=1080 displayHeight=2340 physicalDisplayWidth=1080 physicalDisplayHeight=2340 density={2.8125} cutoutSpec={M 0,0 H -9.066666666666667 V 29.86666666666667 H 9.066666666666667 V 0 H 0 Z @dp} rotation={0} scale={1.0} physicalPixelDisplaySizeRatio={1.0}}} sideOverrides={}}, mRoundedCorners=RoundedCorners{[RoundedCorner{position=TopLeft, radius=6, center=Point(6, 6)}, RoundedCorner{position=TopRight, radius=6, center=Point(1074, 6)}, RoundedCorner{position=BottomRight, radius=6, center=Point(1074, 2334)}, RoundedCorner{position=BottomLeft, radius=6, center=Point(6, 2334)}]}  mRoundedCornerFrame=Rect(0, 0 - 1080, 2340), mPrivacyIndicatorBounds=PrivacyIndicatorBounds {static bounds=Rect(956, 0 - 1080, 84) rotation=0}, mDisplayShape=DisplayShape{ spec=1406003047 displayWidth=1080 displayHeight=2340 physicalPixelDisplaySizeRatio=0.75 rotation=0 offsetX=0 offsetY=0 scale=1.0}, mSources= { InsetsSource: {9b990000 mType=statusBars mFrame=[0,0][1080,84] mVisible=true mFlags= mSideHint=TOP mBoundingRects=null}, InsetsSource: {9b990005 mType=mandatorySystemGestures mFrame=[0,0][1080,118] mVisible=true mFlags= mSideHint=TOP mBoundingRects=null}, InsetsSource: {9b990006 mType=tappableElement mFrame=[0,0][1080,84] mVisible=true mFlags= mSideHint=TOP mBoundingRects=null}, InsetsSource: {3 mType=ime mFrame=[0,1332][1080,2340] mVisible=true mFlags= mSideHint=BOTTOM mBoundingRects=null}, InsetsSource: {27 mType=displayCutout mFrame=[0,0][1080,84] mVisible=true mFlags= mSideHint=TOP mBoundingRects=null}, InsetsSource: {2ea20001 mType=navigationBars mFrame=[0,2205][1080,2340] mVisible=true mFlags= mSideHint=BOTTOM mBoundingRects=null}, InsetsSource: {2ea20004 mType=systemGestures mFrame=[0,0][0,0] mVisible=true mFlags= mSideHint=NONE mBoundingRects=null}, InsetsSource: {2ea20005 mType=mandatorySystemGestures mFrame=[0,2205][1080,2340] mVisible=true mFlags= mSideHint=BOTTOM mBoundingRects=null}, InsetsSource: {2ea20006 mType=tappableElement mFrame=[0,2205][1080,2340] mVisible=true mFlags= mSideHint=BOTTOM mBoundingRects=null}, InsetsSource: {2ea20024 mType=systemGestures mFrame=[0,0][0,0] mVisible=true mFlags= mSideHint=NONE mBoundingRects=null} }
+2026-04-27 12:16:18.431 29303-29303 InsetsController        com.zakazky.app                      I  controlAnimationUncheckedInner: Added types=ime, animType=0, host=com.zakazky.app/com.zakazky.app.MainActivity, from=android.view.InsetsController.controlAnimationUnchecked:1608 android.view.InsetsController.applyAnimation:2416 android.view.InsetsController.applyAnimation:2343 
+2026-04-27 12:16:18.432 29303-29446 InteractionJankMonitor  com.zakazky.app                      W  Initializing without READ_DEVICE_CONFIG permission. enabled=false, interval=1, missedFrameThreshold=3, frameTimeThreshold=64, package=com.zakazky.app
+2026-04-27 12:16:18.437 29303-29303 BLASTBufferQueue_Java   com.zakazky.app                      I  update, w= 1080 h= 2340 mName = VRI[MainActivity]@640abf3 mNativeObject= 0xb4000072560f42a0 sc.mNativeObject= 0xb4000072860cab90 format= -1 caller= android.view.ViewRootImpl.updateBlastSurfaceIfNeeded:3574 android.view.ViewRootImpl.relayoutWindow:11685 android.view.ViewRootImpl.performTraversals:4804 android.view.ViewRootImpl.doTraversal:3924 android.view.ViewRootImpl$TraversalRunnable.run:12903 android.view.Choreographer$CallbackRecord.run:1901 
+2026-04-27 12:16:18.437 29303-29303 VRI[MainAc...y]@640abf3 com.zakazky.app                      I  Relayout returned: old=(0,0,1080,2340) new=(0,0,1080,2340) relayoutAsync=true req=(1080,2340)0 dur=0 res=0x0 s={true 0xb4000071d60f4d00} ch=false seqId=0
+2026-04-27 12:16:18.439 29303-29303 VRI[MainAc...y]@640abf3 com.zakazky.app                      I  registerCallbackForPendingTransactions
+2026-04-27 12:16:18.440 29303-29348 VRI[MainAc...y]@640abf3 com.zakazky.app                      I  mWNT: t=0xb4000073261168d0 mBlastBufferQueue=0xb4000072560f42a0 fn= 1226 HdrRenderState mRenderHdrSdrRatio=1.0 caller= android.view.ViewRootImpl$10.onFrameDraw:6536 android.view.ViewRootImpl$4.onFrameDraw:2489 android.view.ThreadedRenderer$1.onFrameDraw:718 
+2026-04-27 12:16:18.787 29303-29303 InsetsController        com.zakazky.app                      I  cancelAnimation: types=ime, animType=0, host=com.zakazky.app/com.zakazky.app.MainActivity, from=android.view.InsetsController.notifyFinished:2006 android.view.InsetsAnimationThreadControlRunner$1.lambda$notifyFinished$0:82 android.view.InsetsAnimationThreadControlRunner$1.$r8$lambda$cDFF0h4Ncq-8EXdGszv69jrUu7c:0 
+2026-04-27 12:16:18.788 29303-29303 ImeTracker              com.zakazky.app                      I  com.zakazky.app:ae961579: onShown
+2026-04-27 12:16:21.191 29303-29303 VRI[MainAc...y]@640abf3 com.zakazky.app                      I  ViewPostIme pointer 0
+2026-04-27 12:16:21.226 29303-29303 VRI[MainAc...y]@640abf3 com.zakazky.app                      I  call setFrameRateCategory for touch hint category=no preference, reason=boost timeout, vri=VRI[MainActivity]@640abf3
+2026-04-27 12:16:21.253 29303-29303 VRI[MainAc...y]@640abf3 com.zakazky.app                      I  ViewPostIme pointer 1
+2026-04-27 12:16:21.255 29303-29303 VRI[MainAc...y]@640abf3 com.zakazky.app                      I  call setFrameRateCategory for touch hint category=high hint, reason=touch, vri=VRI[MainActivity]@640abf3
+2026-04-27 12:16:21.263 29303-29303 InputMethodManagerUtils com.zakazky.app                      D  startInputInner - Id : 0
+2026-04-27 12:16:21.263 29303-29303 InputMethodManager      com.zakazky.app                      I  startInputInner - IInputMethodManagerGlobalInvoker.startInputOrWindowGainedFocus
+2026-04-27 12:16:21.266 29303-29317 InputTransport          com.zakazky.app                      D  Input channel constructed: 'ClientS', fd=142
+2026-04-27 12:16:21.319 29303-29303 RecordingIC             com.zakazky.app                      W  requestCursorUpdates is not supported
+2026-04-27 12:16:21.329 29303-29303 RecordingIC             com.zakazky.app                      W  requestCursorUpdates is not supported
+2026-04-27 12:16:21.502 29303-29389 System.out              com.zakazky.app                      I  Stahování dat ze Supabase cloudu... (pokus 4)
+2026-04-27 12:16:21.508 29303-29333 System.out              com.zakazky.app                      I  Pokus 4 selhal: CLEARTEXT communication to 194.182.79.72 not permitted by network security policy. Zkouším znovu za 5s...
+2026-04-27 12:16:24.256 29303-29303 VRI[MainAc...y]@640abf3 com.zakazky.app                      I  call setFrameRateCategory for touch hint category=no preference, reason=boost timeout, vri=VRI[MainActivity]@640abf3
+2026-04-27 12:16:24.543 29303-29303 VRI[MainAc...y]@640abf3 com.zakazky.app                      I  ViewPostIme pointer 0
+2026-04-27 12:16:24.546 29303-29303 VRI[MainAc...y]@640abf3 com.zakazky.app                      I  call setFrameRateCategory for touch hint category=high hint, reason=touch, vri=VRI[MainActivity]@640abf3
+2026-04-27 12:16:24.615 29303-29303 VRI[MainAc...y]@640abf3 com.zakazky.app                      I  ViewPostIme pointer 1
+2026-04-27 12:16:24.624 29303-29303 InputMethodManagerUtils com.zakazky.app                      D  startInputInner - Id : 0
+2026-04-27 12:16:24.625 29303-29303 InputMethodManager      com.zakazky.app                      I  startInputInner - IInputMethodManagerGlobalInvoker.startInputOrWindowGainedFocus
+2026-04-27 12:16:24.627 29303-29317 InputTransport          com.zakazky.app                      D  Input channel constructed: 'ClientS', fd=145
+2026-04-27 12:16:24.663 29303-29303 RecordingIC             com.zakazky.app                      W  requestCursorUpdates is not supported
+2026-04-27 12:16:24.673 29303-29303 RecordingIC             com.zakazky.app                      W  requestCursorUpdates is not supported
+2026-04-27 12:16:26.508 29303-29333 System.out              com.zakazky.app                      I  Stahování dat ze Supabase cloudu... (pokus 5)
+2026-04-27 12:16:26.513 29303-29334 System.out              com.zakazky.app                      I  Pokus 5 selhal: CLEARTEXT communication to 194.182.79.72 not permitted by network security policy. Zkouším znovu za 5s...
+2026-04-27 12:16:27.617 29303-29303 VRI[MainAc...y]@640abf3 com.zakazky.app                      I  call setFrameRateCategory for touch hint category=no preference, reason=boost timeout, vri=VRI[MainActivity]@640abf3
+2026-04-27 12:16:28.448 29303-29303 VRI[MainAc...y]@640abf3 com.zakazky.app                      I  ViewPostIme pointer 0
+2026-04-27 12:16:28.451 29303-29303 VRI[MainAc...y]@640abf3 com.zakazky.app                      I  call setFrameRateCategory for touch hint category=high hint, reason=touch, vri=VRI[MainActivity]@640abf3
+2026-04-27 12:16:28.527 29303-29303 VRI[MainAc...y]@640abf3 com.zakazky.app                      I  ViewPostIme pointer 1
+2026-04-27 12:16:28.536 29303-29303 InputMethodManagerUtils com.zakazky.app                      D  startInputInner - Id : 0
+2026-04-27 12:16:28.536 29303-29303 InputMethodManager      com.zakazky.app                      I  startInputInner - IInputMethodManagerGlobalInvoker.startInputOrWindowGainedFocus
+2026-04-27 12:16:28.539 29303-29366 InputTransport          com.zakazky.app                      D  Input channel constructed: 'ClientS', fd=154
+2026-04-27 12:16:28.575 29303-29303 RecordingIC             com.zakazky.app                      W  requestCursorUpdates is not supported
+2026-04-27 12:16:28.580 29303-29303 RecordingIC             com.zakazky.app                      W  requestCursorUpdates is not supported
+2026-04-27 12:16:31.529 29303-29303 VRI[MainAc...y]@640abf3 com.zakazky.app                      I  call setFrameRateCategory for touch hint category=no preference, reason=boost timeout, vri=VRI[MainActivity]@640abf3
+2026-04-27 12:16:40.574 29303-29303 VRI[MainAc...y]@640abf3 com.zakazky.app                      I  ViewPostIme pointer 0
+2026-04-27 12:16:40.578 29303-29303 VRI[MainAc...y]@640abf3 com.zakazky.app                      I  call setFrameRateCategory for touch hint category=high hint, reason=touch, vri=VRI[MainActivity]@640abf3
+2026-04-27 12:16:40.653 29303-29303 VRI[MainAc...y]@640abf3 com.zakazky.app                      I  ViewPostIme pointer 1
+2026-04-27 12:16:40.723 29303-29303 InsetsController        com.zakazky.app                      D  hide(ime(), fromIme=false)
+2026-04-27 12:16:40.724 29303-29303 ImeTracker              com.zakazky.app                      I  com.zakazky.app:22af4069: onRequestHide at ORIGIN_CLIENT reason HIDE_SOFT_INPUT_BY_INSETS_API fromUser false
+2026-04-27 12:16:40.724 29303-29303 WindowOnBackDispatcher  com.zakazky.app                      W  sendCancelIfRunning: isInProgress=false callback=android.view.ImeBackAnimationController@edad378
+2026-04-27 12:16:40.724 29303-29303 InsetsController        com.zakazky.app                      D  Setting requestedVisibleTypes to -9 (was -1)
+2026-04-27 12:16:40.724 29303-29303 InsetsController        com.zakazky.app                      I  setRequestedVisibleTypes: visible=false, mask=ime, host=com.zakazky.app/com.zakazky.app.MainActivity, from=android.view.InsetsController.controlAnimationUnchecked:1604 android.view.InsetsController.applyAnimation:2416 android.view.InsetsController.applyAnimation:2343 android.view.InsetsController.hide:1540 android.view.InsetsController.hide:1450 androidx.compose.ui.platform.coreshims.SoftwareKeyboardControllerCompat$Impl30.hide:226 androidx.compose.ui.platform.coreshims.SoftwareKeyboardControllerCompat.hide:81 androidx.compose.ui.text.input.InputMethodManagerImpl.hideSoftInput:72 androidx.compose.ui.text.input.TextInputServiceAndroid.setKeyboardVisibleImmediately:405 androidx.compose.ui.text.input.TextInputServiceAndroid.processInputCommands:310 
+2026-04-27 12:16:40.724 29303-29303 InsetsController        com.zakazky.app                      I  controlAnimationUncheckedInner: Added types=ime, animType=1, host=com.zakazky.app/com.zakazky.app.MainActivity, from=android.view.InsetsController.controlAnimationUnchecked:1608 android.view.InsetsController.applyAnimation:2416 android.view.InsetsController.applyAnimation:2343 
+2026-04-27 12:16:40.724 29303-29303 InputMethodManagerUtils com.zakazky.app                      D  startInputInner - Id : 0
+2026-04-27 12:16:40.724 29303-29303 InputMethodManager      com.zakazky.app                      I  startInputInner - IInputMethodManagerGlobalInvoker.startInputOrWindowGainedFocus
+2026-04-27 12:16:40.725 29303-29303 BLASTBufferQueue_Java   com.zakazky.app                      I  update, w= 1080 h= 2340 mName = VRI[MainActivity]@640abf3 mNativeObject= 0xb4000072560f42a0 sc.mNativeObject= 0xb4000072860cab90 format= -1 caller= android.view.ViewRootImpl.updateBlastSurfaceIfNeeded:3574 android.view.ViewRootImpl.relayoutWindow:11685 android.view.ViewRootImpl.performTraversals:4804 android.view.ViewRootImpl.doTraversal:3924 android.view.ViewRootImpl$TraversalRunnable.run:12903 android.view.Choreographer$CallbackRecord.run:1901 
+2026-04-27 12:16:40.725 29303-29303 VRI[MainAc...y]@640abf3 com.zakazky.app                      I  Relayout returned: old=(0,0,1080,2340) new=(0,0,1080,2340) relayoutAsync=true req=(1080,2340)0 dur=0 res=0x0 s={true 0xb4000071d60f4d00} ch=false seqId=0
+2026-04-27 12:16:40.727 29303-29303 VRI[MainAc...y]@640abf3 com.zakazky.app                      I  registerCallbackForPendingTransactions
+2026-04-27 12:16:40.727 29303-29347 VRI[MainAc...y]@640abf3 com.zakazky.app                      I  mWNT: t=0xb400007326117c10 mBlastBufferQueue=0xb4000072560f42a0 fn= 1431 HdrRenderState mRenderHdrSdrRatio=1.0 caller= android.view.ViewRootImpl$10.onFrameDraw:6536 android.view.ViewRootImpl$4.onFrameDraw:2489 android.view.ThreadedRenderer$1.onFrameDraw:718 
+2026-04-27 12:16:40.728 29303-29381 InputTransport          com.zakazky.app                      D  Input channel constructed: 'ClientS', fd=147
+2026-04-27 12:16:41.033 29303-29303 InsetsController        com.zakazky.app                      I  cancelAnimation: types=ime, animType=1, host=com.zakazky.app/com.zakazky.app.MainActivity, from=android.view.InsetsController.notifyFinished:2006 android.view.InsetsAnimationThreadControlRunner$1.lambda$notifyFinished$0:82 android.view.InsetsAnimationThreadControlRunner$1.$r8$lambda$cDFF0h4Ncq-8EXdGszv69jrUu7c:0 
+2026-04-27 12:16:41.041 29303-29303 InsetsController        com.zakazky.app                      I  onStateChanged: host=com.zakazky.app/com.zakazky.app.MainActivity, from=android.view.ViewRootImpl.onInsetsStateChanged:3026, state=InsetsState: {mDisplayFrame=Rect(0, 0 - 1080, 2340), mDisplayCutout=DisplayCutout{insets=Rect(0, 84 - 0, 0) waterfall=Insets{left=0, top=0, right=0, bottom=0} boundingRect={Bounds=[Rect(0, 0 - 0, 0), Rect(515, 0 - 566, 84), Rect(0, 0 - 0, 0), Rect(0, 0 - 0, 0)]} cutoutPathParserInfo={CutoutPathParserInfo{displayWidth=1080 displayHeight=2340 physicalDisplayWidth=1080 physicalDisplayHeight=2340 density={2.8125} cutoutSpec={M 0,0 H -9.066666666666667 V 29.86666666666667 H 9.066666666666667 V 0 H 0 Z @dp} rotation={0} scale={1.0} physicalPixelDisplaySizeRatio={1.0}}} sideOverrides={}}, mRoundedCorners=RoundedCorners{[RoundedCorner{position=TopLeft, radius=6, center=Point(6, 6)}, RoundedCorner{position=TopRight, radius=6, center=Point(1074, 6)}, RoundedCorner{position=BottomRight, radius=6, center=Point(1074, 2334)}, RoundedCorner{position=BottomLeft, radius=6, center=Point(6, 2334)}]}  mRoundedCornerFrame=Rect(0, 0 - 1080, 2340), mPrivacyIndicatorBounds=PrivacyIndicatorBounds {static bounds=Rect(956, 0 - 1080, 84) rotation=0}, mDisplayShape=DisplayShape{ spec=1406003047 displayWidth=1080 displayHeight=2340 physicalPixelDisplaySizeRatio=0.75 rotation=0 offsetX=0 offsetY=0 scale=1.0}, mSources= { InsetsSource: {9b990000 mType=statusBars mFrame=[0,0][1080,84] mVisible=true mFlags= mSideHint=TOP mBoundingRects=null}, InsetsSource: {9b990005 mType=mandatorySystemGestures mFrame=[0,0][1080,118] mVisible=true mFlags= mSideHint=TOP mBoundingRects=null}, InsetsSource: {9b990006 mType=tappableElement mFrame=[0,0][1080,84] mVisible=true mFlags= mSideHint=TOP mBoundingRects=null}, InsetsSource: {3 mType=ime mFrame=[0,1332][1080,2340] mVisible=false mFlags= mSideHint=BOTTOM mBoundingRects=null}, InsetsSource: {27 mType=displayCutout mFrame=[0,0][1080,84] mVisible=true mFlags= mSideHint=TOP mBoundingRects=null}, InsetsSource: {2ea20001 mType=navigationBars mFrame=[0,2205][1080,2340] mVisible=true mFlags= mSideHint=BOTTOM mBoundingRects=null}, InsetsSource: {2ea20004 mType=systemGestures mFrame=[0,0][0,0] mVisible=true mFlags= mSideHint=NONE mBoundingRects=null}, InsetsSource: {2ea20005 mType=mandatorySystemGestures mFrame=[0,2205][1080,2340] mVisible=true mFlags= mSideHint=BOTTOM mBoundingRects=null}, InsetsSource: {2ea20006 mType=tappableElement mFrame=[0,2205][1080,2340] mVisible=true mFlags= mSideHint=BOTTOM mBoundingRects=null}, InsetsSource: {2ea20024 mType=systemGestures mFrame=[0,0][0,0] mVisible=true mFlags= mSideHint=NONE mBoundingRects=null} }
+2026-04-27 12:16:41.041 29303-29303 VRI[MainAc...y]@640abf3 com.zakazky.app                      I  handleResized, frames=ClientWindowFrames{frame=[0,0][1080,2340] display=[0,0][1080,2340] parentFrame=[0,0][0,0]} displayId=0 dragResizing=false compatScale=1.0 frameChanged=false attachedFrameChanged=false configChanged=false displayChanged=false compatScaleChanged=false dragResizingChanged=false
+2026-04-27 12:16:41.058 29303-29303 InsetsSourceConsumer    com.zakazky.app                      I  applyRequestedVisibilityToControl: visible=true, type=navigationBars, host=com.zakazky.app/com.zakazky.app.MainActivity
+2026-04-27 12:16:41.059 29303-29303 ImeTracker              com.zakazky.app                      I  system_server:ea5fa4b2: onCancelled at PHASE_CLIENT_ON_CONTROLS_CHANGED
+2026-04-27 12:16:41.443 29303-29303 InsetsController        com.zakazky.app                      I  onStateChanged: host=com.zakazky.app/com.zakazky.app.MainActivity, from=android.view.ViewRootImpl.onInsetsStateChanged:3026, state=InsetsState: {mDisplayFrame=Rect(0, 0 - 1080, 2340), mDisplayCutout=DisplayCutout{insets=Rect(0, 84 - 0, 0) waterfall=Insets{left=0, top=0, right=0, bottom=0} boundingRect={Bounds=[Rect(0, 0 - 0, 0), Rect(515, 0 - 566, 84), Rect(0, 0 - 0, 0), Rect(0, 0 - 0, 0)]} cutoutPathParserInfo={CutoutPathParserInfo{displayWidth=1080 displayHeight=2340 physicalDisplayWidth=1080 physicalDisplayHeight=2340 density={2.8125} cutoutSpec={M 0,0 H -9.066666666666667 V 29.86666666666667 H 9.066666666666667 V 0 H 0 Z @dp} rotation={0} scale={1.0} physicalPixelDisplaySizeRatio={1.0}}} sideOverrides={}}, mRoundedCorners=RoundedCorners{[RoundedCorner{position=TopLeft, radius=6, center=Point(6, 6)}, RoundedCorner{position=TopRight, radius=6, center=Point(1074, 6)}, RoundedCorner{position=BottomRight, radius=6, center=Point(1074, 2334)}, RoundedCorner{position=BottomLeft, radius=6, center=Point(6, 2334)}]}  mRoundedCornerFrame=Rect(0, 0 - 1080, 2340), mPrivacyIndicatorBounds=PrivacyIndicatorBounds {static bounds=Rect(956, 0 - 1080, 84) rotation=0}, mDisplayShape=DisplayShape{ spec=1406003047 displayWidth=1080 displayHeight=2340 physicalPixelDisplaySizeRatio=0.75 rotation=0 offsetX=0 offsetY=0 scale=1.0}, mSources= { InsetsSource: {9b990000 mType=statusBars mFrame=[0,0][1080,84] mVisible=true mFlags= mSideHint=TOP mBoundingRects=null}, InsetsSource: {9b990005 mType=mandatorySystemGestures mFrame=[0,0][1080,118] mVisible=true mFlags= mSideHint=TOP mBoundingRects=null}, InsetsSource: {9b990006 mType=tappableElement mFrame=[0,0][1080,84] mVisible=true mFlags= mSideHint=TOP mBoundingRects=null}, InsetsSource: {3 mType=ime mFrame=[0,0][0,0] mVisible=false mFlags= mSideHint=NONE mBoundingRects=null}, InsetsSource: {27 mType=displayCutout mFrame=[0,0][1080,84] mVisible=true mFlags= mSideHint=TOP mBoundingRects=null}, InsetsSource: {2ea20001 mType=navigationBars mFrame=[0,2205][1080,2340] mVisible=true mFlags= mSideHint=BOTTOM mBoundingRects=null}, InsetsSource: {2ea20004 mType=systemGestures mFrame=[0,0][0,0] mVisible=true mFlags= mSideHint=NONE mBoundingRects=null}, InsetsSource: {2ea20005 mType=mandatorySystemGestures mFrame=[0,2205][1080,2340] mVisible=true mFlags= mSideHint=BOTTOM mBoundingRects=null}, InsetsSource: {2ea20006 mType=tappableElement mFrame=[0,2205][1080,2340] mVisible=true mFlags= mSideHint=BOTTOM mBoundingRects=null}, InsetsSource: {2ea20024 mType=systemGestures mFrame=[0,0][0,0] mVisible=true mFlags= mSideHint=NONE mBoundingRects=null} }
+2026-04-27 12:16:41.443 29303-29303 VRI[MainAc...y]@640abf3 com.zakazky.app                      I  handleResized, frames=ClientWindowFrames{frame=[0,0][1080,2340] display=[0,0][1080,2340] parentFrame=[0,0][0,0]} displayId=0 dragResizing=false compatScale=1.0 frameChanged=false attachedFrameChanged=false configChanged=false displayChanged=false compatScaleChanged=false dragResizingChanged=false
+2026-04-27 12:16:43.658 29303-29303 VRI[MainAc...y]@640abf3 com.zakazky.app                      I  call setFrameRateCategory for touch hint category=no preference, reason=boost timeout, vri=VRI[MainActivity]@640abf3
+2026-04-27 12:16:54.384 29303-29303 VRI[MainAc...y]@640abf3 com.zakazky.app                      I  ViewPostIme pointer 0
+2026-04-27 12:16:54.392 29303-29303 VRI[MainAc...y]@640abf3 com.zakazky.app                      I  call setFrameRateCategory for touch hint category=high hint, reason=touch, vri=VRI[MainActivity]@640abf3
+2026-04-27 12:16:54.437 29303-29303 VRI[MainAc...y]@640abf3 com.zakazky.app                      I  ViewPostIme pointer 1
+2026-04-27 12:16:54.548 29303-29311 InputTransport          com.zakazky.app                      D  Input channel destroyed: 'ClientS', fd=142
+2026-04-27 12:16:54.548 29303-29311 InputTransport          com.zakazky.app                      D  Input channel destroyed: 'ClientS', fd=145
+2026-04-27 12:16:54.548 29303-29311 InputTransport          com.zakazky.app                      D  Input channel destroyed: 'ClientS', fd=154
+2026-04-27 12:16:54.548 29303-29311 InputTransport          com.zakazky.app                      D  Input channel destroyed: 'ClientS', fd=147
+2026-04-27 12:16:54.548 29303-29311 InputTransport          com.zakazky.app                      D  Input channel destroyed: 'ClientS', fd=167
+2026-04-27 12:16:54.548 29303-29311 InputTransport          com.zakazky.app                      D  Input channel destroyed: 'ClientS', fd=158
+2026-04-27 12:16:54.710 29303-29389 System.out              com.zakazky.app                      I  ❌ Upload do cloudu selhal: CLEARTEXT communication to 194.182.79.72 not permitted by network security policy
+2026-04-27 12:16:57.088 29303-29303 VRI[MainAc...y]@640abf3 com.zakazky.app                      I  ViewPostIme pointer 0
+2026-04-27 12:16:57.134 29303-29303 VRI[MainAc...y]@640abf3 com.zakazky.app                      I  ViewPostIme pointer 1
+2026-04-27 12:16:57.151 29303-29303 InsetsController        com.zakazky.app                      D  hide(ime(), fromIme=false)
+2026-04-27 12:16:57.153 29303-29303 ImeTracker              com.zakazky.app                      I  com.zakazky.app:5ca33d90: onRequestHide at ORIGIN_CLIENT reason HIDE_SOFT_INPUT_BY_INSETS_API fromUser false
+2026-04-27 12:16:57.153 29303-29303 ImeTracker              com.zakazky.app                      I  com.zakazky.app:5ca33d90: onCancelled at PHASE_CLIENT_ALREADY_HIDDEN
+2026-04-27 12:17:00.140 29303-29303 VRI[MainAc...y]@640abf3 com.zakazky.app                      I  call setFrameRateCategory for touch hint category=no preference, reason=boost timeout, vri=VRI[MainActivity]@640abf3
+2026-04-27 12:17:31.517 29303-29389 System.out              com.zakazky.app                      I  🔄 Polling zachytil neodeslaná lokální data! Spouštím záchranný upload místo stahování.
+2026-04-27 12:17:31.608 29303-29334 System.out              com.zakazky.app                      I  ❌ Upload do cloudu selhal: CLEARTEXT communication to 194.182.79.72 not permitted by network security policy
+2026-04-27 12:18:31.606 29303-29334 System.out              com.zakazky.app                      I  🔄 Polling zachytil neodeslaná lokální data! Spouštím záchranný upload místo stahování.
+2026-04-27 12:18:31.691 29303-29333 System.out              com.zakazky.app                      I  ❌ Upload do cloudu selhal: CLEARTEXT communication to 194.182.79.72 not permitted by network security policy
+2026-04-27 12:18:31.706 29303-29310 com.zakazky.app         com.zakazky.app                      I  Background young concurrent mark compact GC freed 176KB AllocSpace bytes, 8(44MB) LOS objects, 22% free, 64MB/83MB, paused 147us,6.847ms total 30.784ms
+2026-04-27 12:18:39.149 29303-29303 VRI[MainAc...y]@640abf3 com.zakazky.app                      I  ViewPostIme pointer 0
+2026-04-27 12:18:39.152 29303-29303 VRI[MainAc...y]@640abf3 com.zakazky.app                      I  call setFrameRateCategory for touch hint category=high hint, reason=touch, vri=VRI[MainActivity]@640abf3
+2026-04-27 12:18:39.202 29303-29303 VRI[MainAc...y]@640abf3 com.zakazky.app                      I  ViewPostIme pointer 1
+2026-04-27 12:18:42.208 29303-29303 VRI[MainAc...y]@640abf3 com.zakazky.app                      I  call setFrameRateCategory for touch hint category=no preference, reason=boost timeout, vri=VRI[MainActivity]@640abf3
+2026-04-27 12:19:31.688 29303-29333 System.out              com.zakazky.app                      I  🔄 Polling zachytil neodeslaná lokální data! Spouštím záchranný upload místo stahování.
+2026-04-27 12:19:31.776 29303-29389 System.out              com.zakazky.app                      I  ❌ Upload do cloudu selhal: CLEARTEXT communication to 194.182.79.72 not permitted by network security policy

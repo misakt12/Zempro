@@ -515,9 +515,10 @@ object AppDatabase {
                     )
                 }
                 
-                // Odesíláme PŘESNĚ PO JEDNÉ zakázce, abychom absolutně eliminovali 
-                // OutOfMemoryError na telefonech mechaniků, které mají málo RAM.
-                cloudTasks.chunked(1).forEach { chunk ->
+                // Odesíláme po 50 zakázkách naráz (místo po 1).
+                // Vzhledem k tomu, že fotky odfiltrujeme a server je už nevrací, nehrozí OutOfMemoryError.
+                // Zároveň se tím drasticky sníží počet HTTP dotazů ze stovek na jednotky (eliminuje zahřívání telefonu).
+                cloudTasks.chunked(50).forEach { chunk ->
                     if (chunk.isNotEmpty()) {
                         httpClient.post("$SERVER_URL/tasks/upsert") {
                             contentType(ContentType.Application.Json)
