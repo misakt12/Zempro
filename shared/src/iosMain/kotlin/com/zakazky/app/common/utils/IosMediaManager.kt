@@ -109,6 +109,7 @@ actual fun rememberMediaManager(onResult: (ByteArray?) -> Unit): MediaManager {
                     sourceType = UIImagePickerControllerSourceType.UIImagePickerControllerSourceTypeCamera
                     delegate = imagePickerDelegate
                     allowsEditing = false
+                    modalPresentationStyle = UIModalPresentationOverFullScreen
                 }
                 root.presentViewController(picker, animated = true, completion = null)
             }
@@ -120,6 +121,7 @@ actual fun rememberMediaManager(onResult: (ByteArray?) -> Unit): MediaManager {
                     sourceType = UIImagePickerControllerSourceType.UIImagePickerControllerSourceTypePhotoLibrary
                     delegate = imagePickerDelegate
                     allowsEditing = false
+                    modalPresentationStyle = UIModalPresentationOverFullScreen
                 }
                 root.presentViewController(picker, animated = true, completion = null)
             }
