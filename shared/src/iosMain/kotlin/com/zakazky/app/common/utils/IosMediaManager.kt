@@ -23,21 +23,28 @@ private class ImagePickerDelegate : NSObject(),
         picker: UIImagePickerController,
         didFinishPickingMediaWithInfo: Map<Any?, *>
     ) {
-        picker.dismissViewControllerAnimated(true, null)
-        val image = didFinishPickingMediaWithInfo[UIImagePickerControllerOriginalImage] as? UIImage
-        if (image != null) {
-            val bytes = compressUIImage(image)
-            pendingMediaCallback?.invoke(bytes)
-        } else {
-            pendingMediaCallback?.invoke(null)
+        picker.dismissViewControllerAnimated(true) {
+            try {
+                val image = didFinishPickingMediaWithInfo[UIImagePickerControllerOriginalImage] as? UIImage
+                if (image != null) {
+                    val bytes = compressUIImage(image)
+                    pendingMediaCallback?.invoke(bytes)
+                } else {
+                    pendingMediaCallback?.invoke(null)
+                }
+            } catch (e: Exception) {
+                pendingMediaCallback?.invoke(null)
+            } finally {
+                pendingMediaCallback = null
+            }
         }
-        pendingMediaCallback = null
     }
 
     override fun imagePickerControllerDidCancel(picker: UIImagePickerController) {
-        picker.dismissViewControllerAnimated(true, null)
-        pendingMediaCallback?.invoke(null)
-        pendingMediaCallback = null
+        picker.dismissViewControllerAnimated(true) {
+            pendingMediaCallback?.invoke(null)
+            pendingMediaCallback = null
+        }
     }
 }
 
@@ -65,9 +72,11 @@ private fun compressUIImage(image: UIImage): ByteArray? {
 
     val nsData = UIImageJPEGRepresentation(scaled, 0.7) ?: return null
     val length = nsData.length.toInt()
+    if (length <= 0 || nsData.bytes == null) return null
+    
     val bytes = ByteArray(length)
     bytes.usePinned { pinned ->
-        memcpy(pinned.addressOf(0), nsData.bytes, nsData.length.toULong())
+        memcpy(pinned.addressOf(0), nsData.bytes, length.toULong())
     }
     return bytes
 }
