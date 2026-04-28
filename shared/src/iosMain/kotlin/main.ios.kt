@@ -8,7 +8,7 @@ actual fun getPlatformName(): String = "iOS"
 @OptIn(androidx.compose.ui.ExperimentalComposeUiApi::class)
 fun MainViewController() = ComposeUIViewController(
     configure = {
-        onFocusBehavior = OnFocusBehavior.DoNotPan
+        onFocusBehavior = OnFocusBehavior.DoNothing
     }
 ) {
     AppDatabase.init(PlatformStorage())
