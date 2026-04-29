@@ -853,7 +853,8 @@ fun TaskDetailScreen(
                     Spacer(modifier = Modifier.height(16.dp))
 
                     // Fotky od mechanika
-                    if (task.localPhotos.isNotEmpty()) {
+                    val remoteMechanicImagesCompleted = task.photoUrls.filter { !it.contains("_task_") }
+                    if (task.localPhotos.isNotEmpty() || remoteMechanicImagesCompleted.isNotEmpty()) {
                         Text("📷 Fotky z dílny (od mechanika):", fontWeight = FontWeight.Bold, color = Color.White, fontSize = 14.sp)
                         Spacer(Modifier.height(10.dp))
                         LazyRow(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -873,6 +874,16 @@ fun TaskDetailScreen(
                                             .clickable { zoomedImageBase64 = byteArr }
                                     )
                                 }
+                            }
+                            items(remoteMechanicImagesCompleted) { url ->
+                                RemoteImage(
+                                    url = url,
+                                    modifier = Modifier
+                                        .size(140.dp)
+                                        .clip(RoundedCornerShape(12.dp))
+                                        .border(1.dp, Navy600, RoundedCornerShape(12.dp)),
+                                    onClick = { zoomedImageBase64 = it }
+                                )
                             }
                         }
                         Spacer(Modifier.height(16.dp))
