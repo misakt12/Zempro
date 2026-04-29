@@ -54,10 +54,13 @@ fun RemoteImage(url: String, modifier: Modifier = Modifier, onClick: ((ByteArray
 
     LaunchedEffect(url) {
         try {
-            val fullUrl = if (url.startsWith("http")) url else "http://194.182.79.72:8080/$url"
+            // Android a PC používají OkHttp, které nesnáší mezery v URL. iOS Darwin to řeší automaticky.
+            val safeUrl = url.replace(" ", "%20")
+            val fullUrl = if (safeUrl.startsWith("http")) safeUrl else "http://194.182.79.72:8080/$safeUrl"
             imageBytes = com.zakazky.app.common.models.AppDatabase.httpClient.get(fullUrl).readBytes()
         } catch (e: Exception) {
             hasError = true
+            println("❌ Chyba stahování fotky ($url): ${e.message}")
         }
     }
 
