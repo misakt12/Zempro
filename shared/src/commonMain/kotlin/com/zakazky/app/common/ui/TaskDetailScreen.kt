@@ -43,6 +43,48 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.ui.layout.ContentScale
+import io.ktor.client.request.get
+import io.ktor.client.call.body
+import io.ktor.client.statement.readBytes
+
+@Composable
+fun RemoteImage(url: String, modifier: Modifier = Modifier, onClick: ((ByteArray) -> Unit)? = null) {
+    var imageBytes by remember { mutableStateOf<ByteArray?>(null) }
+    var hasError by remember { mutableStateOf(false) }
+
+    LaunchedEffect(url) {
+        try {
+            val fullUrl = if (url.startsWith("http")) url else "http://194.182.79.72:8080/$url"
+            imageBytes = com.zakazky.app.common.models.AppDatabase.httpClient.get(fullUrl).readBytes()
+        } catch (e: Exception) {
+            hasError = true
+        }
+    }
+
+    if (imageBytes != null) {
+        val bitmap = remember(imageBytes) { try { imageBytes!!.toImageBitmap() } catch(e:Exception){null} }
+        if (bitmap != null) {
+            Image(
+                bitmap = bitmap,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = if (onClick != null) modifier.clickable { onClick(imageBytes!!) } else modifier
+            )
+        } else {
+            Box(modifier = modifier.background(com.zakazky.app.common.theme.Navy700), contentAlignment = Alignment.Center) {
+                Text("Chyba", color = com.zakazky.app.common.theme.ErrorDark)
+            }
+        }
+    } else if (hasError) {
+        Box(modifier = modifier.background(com.zakazky.app.common.theme.Navy700), contentAlignment = Alignment.Center) {
+            Text("Nelze", color = com.zakazky.app.common.theme.Slate400, fontSize = 12.sp)
+        }
+    } else {
+        Box(modifier = modifier.background(com.zakazky.app.common.theme.Navy800), contentAlignment = Alignment.Center) {
+            CircularProgressIndicator(color = com.zakazky.app.common.theme.Blue500, modifier = Modifier.size(24.dp))
+        }
+    }
+}
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -300,7 +342,8 @@ fun TaskDetailScreen(
                         }
                     }
 
-                    if (task.taskImages.isNotEmpty()) {
+                    val remoteTaskImages = task.photoUrls.filter { it.contains("_task_") }
+                    if (task.taskImages.isNotEmpty() || remoteTaskImages.isNotEmpty()) {
                         Spacer(modifier = Modifier.height(16.dp))
                         Text("Obrázky zadání (od šéfa):", fontWeight = FontWeight.Bold, color = Color.White, fontSize = 14.sp)
                         Spacer(modifier = Modifier.height(8.dp))
@@ -315,6 +358,13 @@ fun TaskDetailScreen(
                                         modifier = Modifier.height(150.dp).width(150.dp).clip(RoundedCornerShape(8.dp)).border(1.dp, Navy600, RoundedCornerShape(8.dp)).clickable { zoomedImageBase64 = byteArr }
                                     )
                                 }
+                            }
+                            items(remoteTaskImages) { url ->
+                                RemoteImage(
+                                    url = url,
+                                    modifier = Modifier.height(150.dp).width(150.dp).clip(RoundedCornerShape(8.dp)).border(1.dp, Navy600, RoundedCornerShape(8.dp)),
+                                    onClick = { zoomedImageBase64 = it }
+                                )
                             }
                         }
                         if (isAdmin) {
@@ -346,23 +396,6 @@ fun TaskDetailScreen(
                                 Icon(Icons.Default.AddCircle, contentDescription = null, tint = Slate400, modifier = Modifier.size(32.dp))
                                 Spacer(modifier = Modifier.height(8.dp))
                                 Text("Přidat obrázek zadání (Screenshot)", color = Slate400, fontSize = 14.sp)
-                            }
-                        }
-                    } else if (task.photoUrls.isNotEmpty()) {
-                        Spacer(modifier = Modifier.height(16.dp))
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(120.dp)
-                                .clip(RoundedCornerShape(16.dp))
-                                .background(Navy900)
-                                .border(1.dp, Navy700, RoundedCornerShape(16.dp)),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                Icon(Icons.Default.AddCircle, contentDescription = null, tint = Slate400, modifier = Modifier.size(32.dp))
-                                Spacer(modifier = Modifier.height(8.dp))
-                                Text("Obrázek zadání (Screenshot)", color = Slate400, fontSize = 14.sp)
                             }
                         }
                     }
@@ -562,7 +595,8 @@ fun TaskDetailScreen(
                     }
 
                     // FOTKY OD MECHANIKA (localPhotos)
-                    if (task.localPhotos.isNotEmpty()) {
+                    val remoteMechanicImages = task.photoUrls.filter { !it.contains("_task_") }
+                    if (task.localPhotos.isNotEmpty() || remoteMechanicImages.isNotEmpty()) {
                         Spacer(Modifier.height(24.dp))
                         Text("📷 Fotky z dílny (mechanik):", fontWeight = FontWeight.Bold, color = Color.White, fontSize = 14.sp)
                         Spacer(Modifier.height(12.dp))
@@ -583,6 +617,16 @@ fun TaskDetailScreen(
                                             .clickable { zoomedImageBase64 = byteArr }
                                     )
                                 }
+                            }
+                            items(remoteMechanicImages) { url ->
+                                RemoteImage(
+                                    url = url,
+                                    modifier = Modifier
+                                        .size(140.dp)
+                                        .clip(RoundedCornerShape(12.dp))
+                                        .border(1.dp, Navy600, RoundedCornerShape(12.dp)),
+                                    onClick = { zoomedImageBase64 = it }
+                                )
                             }
                         }
                     } else {

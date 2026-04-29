@@ -625,18 +625,19 @@ object AppDatabase {
     fun importFromBackupJson(jsonString: String): Boolean {
         return try {
             val snapshot = json.decodeFromString<AppSnapshot>(jsonString)
-            withContext(Dispatchers.Main) {
+            scope.launch(Dispatchers.Main) {
                 users.clear()
                 users.addAll(snapshot.users)
                 tasks.clear()
                 tasks.addAll(snapshot.tasks)
                 notifications.clear()
                 notifications.addAll(snapshot.notifications)
+                
+                hasPendingUpload = true
+                saveLocally()
+                pushToCloud() // Obnoví data i do Supabase cloudu
+                println("✅ Záloha úspěšně obnovena — ${snapshot.tasks.size} zakázek, ${snapshot.users.size} uživatelů.")
             }
-            hasPendingUpload = true
-            saveLocally()
-            pushToCloud() // Obnoví data i do Supabase cloudu
-            println("✅ Záloha úspěšně obnovena — ${snapshot.tasks.size} zakázek, ${snapshot.users.size} uživatelů.")
             true
         } catch (e: Exception) {
             println("❌ Obnova zálohy selhala: ${e.message}")
@@ -645,10 +646,7 @@ object AppDatabase {
         }
     }
 
-    private fun withContext(dispatcher: kotlinx.coroutines.CoroutineDispatcher, block: () -> Unit) {
-        // Synchronní verze pro volání z non-suspend kontextu
-        block()
-    }
+
 
     // ════════════════════════════════════════════════════════════════
     // KOŠ — SOFT DELETE, OBNOVA, TRVALÉ SMAZÁNÍ
